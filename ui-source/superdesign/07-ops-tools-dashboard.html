@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ops Tools - Payment Operations</title>
+  <meta name="view-transition" content="same-origin">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&f[]=satoshi@400,500,700&f[]=jet-brains-mono@400&display=swap');
+
+    :root {
+      --bank-blue: #0052FF;
+      --bank-navy: #0F172A;
+      --bank-gray: #F8FAFC;
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-display {
+      font-family: 'General Sans', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .refined-shadow {
+      box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.08);
+    }
+
+    .refined-border {
+      border: 1px solid #e2e8f0;
+    }
+
+    @view-transition {
+      navigation: auto;
+    }
+
+    html {
+      background-color: #F8FAFC;
+    }
+
+    ::view-transition-old(main-nav),
+    ::view-transition-new(main-nav) {
+      animation: none;
+      mix-blend-mode: normal;
+    }
+
+    ::view-transition-old(main-content) {
+      animation: 0.25s ease-out both fade-out;
+    }
+    ::view-transition-new(main-content) {
+      animation: 0.25s ease-in 0.1s both fade-in;
+    }
+
+    @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/dc48f744-c63b-4dce-a1f9-31dce512d2ec" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/9cdb6f33-d486-4996-b25f-e50d06dc9043" as="document">
+  <style>sd-component { display: block; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+</head>
+<body>
+  <div class="flex min-h-screen">
+    <!-- Persistent Navigation -->
+    <div style="view-transition-name: main-nav">
+      <!-- component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+<div v-scope="{ ...{&quot;activeItem&quot;:&quot;ops-tools&quot;,&quot;triageBadgeCount&quot;:4,&quot;dashboardHref&quot;:&quot;https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7&quot;,&quot;triageHref&quot;:&quot;https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930&quot;,&quot;casesHref&quot;:&quot;https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96&quot;,&quot;schemesHref&quot;:&quot;#schemes&quot;,&quot;opsToolsHref&quot;:&quot;https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1&quot;,&quot;auditHref&quot;:&quot;https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2&quot;,&quot;settingsHref&quot;:&quot;#settings&quot;,&quot;userName&quot;:&quot;John Doe&quot;,&quot;userRole&quot;:&quot;Payment Ops II&quot;,&quot;userInitials&quot;:&quot;JD&quot;}, $emit() {} }">
+<aside class="w-64 bg-slate-900 text-white flex flex-col fixed h-full z-50">
+  <div class="p-8 flex items-center gap-3">
+    <div class="w-9 h-9 bg-blue-600 rounded flex items-center justify-center shadow-lg shadow-blue-500/20">
+      <iconify-icon icon="lucide:shield-check" class="text-xl"></iconify-icon>
+    </div>
+    <span class="font-display font-bold text-2xl tracking-tight">SENTINEL</span>
+  </div>
+  
+  <nav class="flex-1 px-4 py-4 space-y-2">
+    <a :href="dashboardHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'dashboard' }">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Dashboard</span>
+    </a>
+    <a :href="triageHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'triage' }">
+      <iconify-icon icon="lucide:list-todo" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Triage Queue</span>
+      <span v-if="triageBadgeCount > 0" class="ml-auto bg-red-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{{ triageBadgeCount }}</span>
+    </a>
+    <a :href="casesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'cases' }">
+      <iconify-icon icon="lucide:briefcase" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Cases</span>
+    </a>
+    <a :href="schemesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'schemes' }">
+      <iconify-icon icon="lucide:landmark" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Schemes</span>
+    </a>
+    <a :href="opsToolsHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'ops' }">
+      <iconify-icon icon="lucide:wrench" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Ops Tools</span>
+    </a>
+    <a :href="auditHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'audit' }">
+      <iconify-icon icon="lucide:clipboard-list" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Audit Log</span>
+    </a>
+  </nav>
+
+  <div class="p-6 border-t border-slate-800">
+    <a :href="settingsHref" class="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-white transition-all text-sm group">
+      <iconify-icon icon="lucide:settings" class="group-hover:rotate-45 transition-transform"></iconify-icon>
+      <span>Settings</span>
+    </a>
+    <div class="mt-6 flex items-center gap-3 px-4">
+      <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold border-2 border-slate-600">{{ userInitials }}</div>
+      <div>
+        <p class="text-sm font-semibold">{{ userName }}</p>
+        <p class="text-[11px] text-slate-500">{{ userRole }}</p>
+      </div>
+    </div>
+  </div>
+</aside>
+</div>
+<!-- /component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-10" style="view-transition-name: main-content">
+      <header class="flex justify-between items-center mb-10">
+        <div class="flex items-center gap-3 text-sm text-slate-500">
+          <a id="breadcrumb-dashboard-link" href="https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7" class="hover:text-blue-600 transition-colors">Dashboard</a>
+          <iconify-icon icon="lucide:chevron-right" class="text-slate-300"></iconify-icon>
+          <span class="text-slate-900 font-semibold">Operations Tools</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full refined-shadow refined-border">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            </span>
+            <span class="text-xs font-bold text-slate-700 tracking-wide">Infrastructure Healthy</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-12 gap-8">
+        <!-- Tools Section -->
+        <section class="col-span-12 lg:col-span-8 space-y-8">
+          <div class="flex items-center justify-between mb-2">
+            <h1 class="text-3xl font-display font-bold text-slate-900">Operational Toolkit</h1>
+            <div class="flex gap-3">
+              <button id="quick-bulk-recall-btn" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700 transition-all">
+                <iconify-icon icon="lucide:zap"></iconify-icon>
+                Initiate Bulk Recalls
+              </button>
+              <button id="quick-settlement-rpt-btn" class="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all">
+                <iconify-icon icon="lucide:download"></iconify-icon>
+                Download Settlement Report
+              </button>
+            </div>
+          </div>
+
+          <!-- Main Tools Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Batch Recall Manager -->
+            <div class="tool-card bg-white p-8 rounded-[2rem] refined-border refined-shadow space-y-6">
+              <div class="flex justify-between items-start">
+                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                  <iconify-icon icon="lucide:layers" class="text-2xl"></iconify-icon>
+                </div>
+                <span class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-green-600 bg-green-50 px-2 py-1 rounded">
+                  <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                  Active
+                </span>
+              </div>
+              <div>
+                <h3 class="text-xl font-display font-bold text-slate-900">Batch Recall Manager</h3>
+                <p class="text-sm text-slate-500 mt-2 leading-relaxed">Initiate and track multiple recall requests simultaneously. Supports bulk CSV uploads for high-volume operational incidents.</p>
+              </div>
+              <div class="pt-4 flex items-center justify-between border-t border-slate-100">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">4 Batches Processing</div>
+                <a id="tool-batch-link" href="#batch-manager" class="text-blue-600 text-sm font-black hover:underline">Open Manager &rarr;</a>
+              </div>
+            </div>
+
+            <!-- Template Editor -->
+            <div class="tool-card bg-white p-8 rounded-[2rem] refined-border refined-shadow space-y-6">
+              <div class="flex justify-between items-start">
+                <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600">
+                  <iconify-icon icon="lucide:file-edit" class="text-2xl"></iconify-icon>
+                </div>
+                <span class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-green-600 bg-green-50 px-2 py-1 rounded">
+                  <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                  Optimal
+                </span>
+              </div>
+              <div>
+                <h3 class="text-xl font-display font-bold text-slate-900">Communication Templates</h3>
+                <p class="text-sm text-slate-500 mt-2 leading-relaxed">Customize outbound email and SMS templates for beneficiary outreach. Dynamic variables mapped to scheme data.</p>
+              </div>
+              <div class="pt-4 flex items-center justify-between border-t border-slate-100">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">12 Managed Templates</div>
+                <a id="tool-template-link" href="https://p.superdesign.dev/draft/9cdb6f33-d486-4996-b25f-e50d06dc9043" class="text-blue-600 text-sm font-black hover:underline">Edit Templates &rarr;</a>
+              </div>
+            </div>
+
+            <!-- Scheme Config -->
+            <div class="tool-card bg-white p-8 rounded-[2rem] refined-border refined-shadow space-y-6">
+              <div class="flex justify-between items-start">
+                <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600">
+                  <iconify-icon icon="lucide:settings-2" class="text-2xl"></iconify-icon>
+                </div>
+                <span class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-yellow-600 bg-yellow-50 px-2 py-1 rounded">
+                  <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
+                  Config Drift
+                </span>
+              </div>
+              <div>
+                <h3 class="text-xl font-display font-bold text-slate-900">Scheme Configuration</h3>
+                <p class="text-sm text-slate-500 mt-2 leading-relaxed">Fine-tune intercept behavior, timeouts, and risk thresholds for BECS, EFT, and international payment schemes.</p>
+              </div>
+              <div class="pt-4 flex items-center justify-between border-t border-slate-100">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Last updated 2d ago</div>
+                <a id="tool-scheme-link" href="https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d" class="text-blue-600 text-sm font-black hover:underline">Manage Schemes &rarr;</a>
+              </div>
+            </div>
+
+            <!-- Reporting Hub -->
+            <div class="tool-card bg-white p-8 rounded-[2rem] refined-border refined-shadow space-y-6">
+              <div class="flex justify-between items-start">
+                <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                  <iconify-icon icon="lucide:bar-chart-3" class="text-2xl"></iconify-icon>
+                </div>
+                <span class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-green-600 bg-green-50 px-2 py-1 rounded">
+                  <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                  Active
+                </span>
+              </div>
+              <div>
+                <h3 class="text-xl font-display font-bold text-slate-900">Reconciliation & Audit</h3>
+                <p class="text-sm text-slate-500 mt-2 leading-relaxed">Generate settlement reports for finance. Export audit logs for compliance reviews and regulatory reporting.</p>
+              </div>
+              <div class="pt-4 flex items-center justify-between border-t border-slate-100">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">Daily automated exports</div>
+                <a id="tool-audit-link" href="https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2" class="text-blue-600 text-sm font-black hover:underline">View Audit Logs &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Integration Health Status -->
+          <div class="bg-slate-900 rounded-[2rem] p-10 text-white shadow-2xl shadow-slate-900/40">
+            <div class="flex items-center justify-between mb-8">
+              <div>
+                <h2 class="text-2xl font-display font-bold">Integration Connectivity</h2>
+                <p class="text-slate-400 text-sm mt-1">Live monitoring of scheme API endpoints and bank nodes.</p>
+              </div>
+              <div class="flex gap-2">
+                <button id="refresh-health-btn" class="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
+                  <iconify-icon icon="lucide:refresh-cw" class="text-white"></iconify-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="p-5 bg-white/5 border border-white/10 rounded-2xl">
+                <div class="flex justify-between items-start mb-4">
+                  <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">BECS Gateway</span>
+                  <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.6)]"></div>
+                </div>
+                <div class="text-2xl font-mono font-bold">12ms</div>
+                <div class="text-[10px] text-green-400 mt-1 font-bold">CONNECTED</div>
+              </div>
+
+              <div class="p-5 bg-white/5 border border-white/10 rounded-2xl">
+                <div class="flex justify-between items-start mb-4">
+                  <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">EFT Intercept</span>
+                  <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.6)]"></div>
+                </div>
+                <div class="text-2xl font-mono font-bold">45ms</div>
+                <div class="text-[10px] text-green-400 mt-1 font-bold">CONNECTED</div>
+              </div>
+
+              <div class="p-5 bg-white/5 border border-white/10 rounded-2xl">
+                <div class="flex justify-between items-start mb-4">
+                  <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">SWIFT Direct</span>
+                  <div class="w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_12px_rgba(234,179,8,0.6)]"></div>
+                </div>
+                <div class="text-2xl font-mono font-bold">182ms</div>
+                <div class="text-[10px] text-yellow-400 mt-1 font-bold">DEGRADED</div>
+              </div>
+
+              <div class="p-5 bg-white/5 border border-white/10 rounded-2xl">
+                <div class="flex justify-between items-start mb-4">
+                  <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Settlement Node</span>
+                  <div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.6)]"></div>
+                </div>
+                <div class="text-2xl font-mono font-bold">ERR</div>
+                <div class="text-[10px] text-red-400 mt-1 font-bold">OFFLINE</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Side Monitor Section -->
+        <section class="col-span-12 lg:col-span-4 space-y-8">
+          <!-- Risk Monitor Component -->
+          <!-- component: SLARiskMonitor (1a9a8196-ed77-4a26-b166-19a35bc5c61d) -->
+<div v-scope="{ ...{&quot;slaCountdown&quot;:&quot;01:45:22&quot;,&quot;riskTitle1&quot;:&quot;Operational Risk:&quot;,&quot;riskMessage1&quot;:&quot;Operational tools are running in limited capacity due to SWIFT direct degradation.&quot;,&quot;riskTitle2&quot;:&quot;Policy Notice:&quot;,&quot;riskMessage2&quot;:&quot;Ensure manual oversight for all international recall batches during current downtime.&quot;}, $emit() {} }">
+<div class="bg-slate-900 rounded-[2rem] p-10 text-white shadow-2xl shadow-slate-900/20 relative overflow-hidden">
+  <div class="absolute top-0 right-0 p-8 opacity-10">
+    <iconify-icon icon="lucide:shield-alert" class="text-8xl"></iconify-icon>
+  </div>
+  
+  <div class="flex items-center justify-between mb-10 relative z-10">
+    <h2 class="font-display font-bold text-xl tracking-tight">SLA & Risk Monitor</h2>
+    <iconify-icon @click="$emit('helpClick')" icon="lucide:info" class="text-slate-500 hover:text-white transition-colors cursor-help"></iconify-icon>
+  </div>
+
+  <div class="text-center mb-10 relative z-10">
+    <div class="text-5xl font-mono font-black text-orange-400 tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(251,146,60,0.3)]">
+      {{ slaCountdown }}
+    </div>
+    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-3">Time to Hard Settlement</div>
+  </div>
+
+  <div class="space-y-4 relative z-10">
+    <div class="p-4 bg-slate-800/40 rounded-2xl border border-slate-700/50 flex gap-4 transition-all hover:bg-slate-800/60 group">
+      <iconify-icon icon="lucide:triangle-alert" class="text-orange-400 text-xl shrink-0 group-hover:scale-110 transition-transform"></iconify-icon>
+      <p class="text-[11px] leading-relaxed text-slate-400 font-medium">
+        <span class="text-white font-black block mb-1">{{ riskTitle1 }}</span> 
+        {{ riskMessage1 }}
+      </p>
+    </div>
+    <div class="p-4 bg-red-500/5 rounded-2xl border border-red-500/20 flex gap-4 transition-all hover:bg-red-500/10 group">
+      <iconify-icon icon="lucide:shield-alert" class="text-red-400 text-xl shrink-0 group-hover:scale-110 transition-transform"></iconify-icon>
+      <p class="text-[11px] leading-relaxed text-slate-400 font-medium">
+        <span class="text-white font-black block mb-1">{{ riskTitle2 }}</span> 
+        {{ riskMessage2 }}
+      </p>
+    </div>
+  </div>
+</div>
+</div>
+<!-- /component: SLARiskMonitor (1a9a8196-ed77-4a26-b166-19a35bc5c61d) -->
+
+          <!-- Action/Status Widget -->
+          <div class="bg-white rounded-[2rem] refined-border refined-shadow p-8 space-y-6">
+            <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest">Current Session Summary</h3>
+            <div class="space-y-4">
+              <div class="flex justify-between p-4 bg-slate-50 rounded-xl">
+                <span class="text-sm font-medium text-slate-600">Recall Success Rate</span>
+                <span class="text-sm font-bold text-slate-900">98.4%</span>
+              </div>
+              <div class="flex justify-between p-4 bg-slate-50 rounded-xl">
+                <span class="text-sm font-medium text-slate-600">Mean Time to Intercept</span>
+                <span class="text-sm font-bold text-slate-900">4.2m</span>
+              </div>
+              <div class="flex justify-between p-4 bg-slate-50 rounded-xl">
+                <span class="text-sm font-medium text-slate-600">High-Value Intercepts</span>
+                <span class="text-sm font-bold text-blue-600">14 Today</span>
+              </div>
+            </div>
+            
+            <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl">
+              <div class="flex items-center gap-2 mb-2">
+                <iconify-icon icon="lucide:info" class="text-blue-600"></iconify-icon>
+                <span class="text-xs font-bold text-blue-900">Policy Enforcement</span>
+              </div>
+              <p class="text-[11px] text-blue-700 leading-relaxed">Recall overrides require dual-token authentication for any transaction exceeding $100k USD equivalent.</p>
+            </div>
+          </div>
+
+          <!-- Action Panel (Optional context) -->
+          <!-- component: ActionPanel (ec98a3f2-dcbf-4874-a2fe-1998b4231a65) -->
+<div v-scope="{ ...{&quot;commEmailTo&quot;:&quot;client.ops@globaltrade.com&quot;,&quot;commSubject&quot;:&quot;Recall Status: XYZ123&quot;,&quot;commPreview&quot;:&quot;\&quot;We have successfully initialized the scheme intercept for your batch payment of $48,250.00. The recall is pending...\&quot;&quot;,&quot;schemeStopHref&quot;:&quot;#stop&quot;,&quot;returnRequestHref&quot;:&quot;#return&quot;,&quot;beneficiaryOutreachHref&quot;:&quot;#outreach&quot;}, $emit() {} }">
+<div class="bg-white rounded-[2.5rem] border border-[#e2e8f0] shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)] p-10 space-y-10">
+  <div class="space-y-2">
+    <h2 class="font-display font-bold text-xl text-slate-900">Recall Actions</h2>
+    <p class="text-xs text-slate-400 font-medium italic">AI-recommended next steps</p>
+  </div>
+
+  <div class="space-y-4">
+    <a :href="schemeStopHref" class="w-full flex items-center justify-between pl-6 pr-5 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all shadow-xl shadow-blue-500/20 group">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-colors">
+          <iconify-icon icon="lucide:stop-circle" class="text-2xl"></iconify-icon>
+        </div>
+        <span class="font-black text-sm tracking-wide">Initiate Scheme Stop</span>
+      </div>
+      <iconify-icon icon="lucide:chevron-right" class="text-xl group-hover:translate-x-1 transition-transform"></iconify-icon>
+    </a>
+
+    <a :href="returnRequestHref" class="w-full flex items-center justify-between pl-6 pr-5 py-5 bg-white border border-slate-200 text-slate-700 hover:border-blue-600 hover:text-blue-600 rounded-2xl transition-all font-bold text-sm group">
+      <div class="flex items-center gap-4">
+        <iconify-icon icon="lucide:undo-2" class="text-xl group-hover:scale-110 transition-transform"></iconify-icon>
+        <span>Return Request</span>
+      </div>
+      <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+    </a>
+
+    <a :href="beneficiaryOutreachHref" class="w-full flex items-center justify-between pl-6 pr-5 py-5 bg-white border border-slate-200 text-slate-700 hover:border-blue-600 hover:text-blue-600 rounded-2xl transition-all font-bold text-sm group">
+      <div class="flex items-center gap-4">
+        <iconify-icon icon="lucide:phone-forwarded" class="text-xl group-hover:scale-110 transition-transform"></iconify-icon>
+        <span>Beneficiary Outreach</span>
+      </div>
+      <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+    </a>
+  </div>
+
+  <div class="pt-8 border-t border-slate-100">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Draft Comms</h3>
+      <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">AUTO-GENERATED</span>
+    </div>
+    <div class="p-5 bg-slate-50/50 rounded-2xl border border-slate-200 text-[11px] text-slate-600 space-y-3 shadow-inner">
+      <div class="flex gap-2">
+        <span class="font-black text-slate-900">To:</span> {{ commEmailTo }}
+      </div>
+      <div class="flex gap-2">
+        <span class="font-black text-slate-900">Sub:</span> {{ commSubject }}
+      </div>
+      <p class="italic leading-relaxed border-t border-slate-100 pt-3">{{ commPreview }}</p>
+    </div>
+    <button @click="$emit('editTemplate')" class="w-full mt-4 text-[11px] font-black text-blue-600 hover:text-blue-800 flex items-center justify-center gap-2 group transition-colors uppercase tracking-widest">
+      <iconify-icon icon="lucide:edit-3" class="group-hover:-translate-y-0.5 transition-transform"></iconify-icon>
+      Modify Template
+    </button>
+  </div>
+</div>
+</div>
+<!-- /component: ActionPanel (ec98a3f2-dcbf-4874-a2fe-1998b4231a65) -->
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

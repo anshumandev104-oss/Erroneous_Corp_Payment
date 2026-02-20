@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Log - BECS Payment Recall</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <meta name="view-transition" content="same-origin">
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&f[]=satoshi@400,500,700&f[]=jet-brains-mono@400&display=swap');
+
+    :root {
+      --bank-blue: #0052FF;
+      --bank-navy: #0F172A;
+      --bank-gray: #F8FAFC;
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-display {
+      font-family: 'General Sans', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .refined-shadow {
+      box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.08);
+    }
+
+    .refined-border {
+      border: 1px solid #e2e8f0;
+    }
+
+    /* View Transitions */
+    html {
+        background-color: #F8FAFC;
+    }
+    @view-transition {
+        navigation: auto;
+    }
+    ::view-transition-old(main-nav),
+    ::view-transition-new(main-nav) {
+        animation: none;
+        mix-blend-mode: normal;
+    }
+    ::view-transition-old(main-content) {
+        animation: 0.25s ease-out both fade-out;
+    }
+    ::view-transition-new(main-content) {
+        animation: 0.25s ease-in 0.1s both fade-in;
+    }
+    @keyframes fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+    @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 10px;
+    }
+  </style>
+  <style>sd-component { display: block; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+</head>
+<body>
+  <div class="flex min-h-screen">
+    <!-- Sidebar Navigation (Persistent) -->
+    <!-- component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+<div v-scope="{ ...{&quot;activeItem&quot;:&quot;audit&quot;,&quot;triageBadgeCount&quot;:4,&quot;dashboardHref&quot;:&quot;https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7&quot;,&quot;triageHref&quot;:&quot;https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930&quot;,&quot;casesHref&quot;:&quot;https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96&quot;,&quot;schemesHref&quot;:&quot;https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d&quot;,&quot;opsToolsHref&quot;:&quot;https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1&quot;,&quot;auditHref&quot;:&quot;https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2&quot;,&quot;settingsHref&quot;:&quot;#settings&quot;,&quot;userName&quot;:&quot;John Doe&quot;,&quot;userRole&quot;:&quot;Payment Ops II&quot;,&quot;userInitials&quot;:&quot;JD&quot;}, $emit() {} }" style="view-transition-name: main-nav">
+<aside class="w-64 bg-slate-900 text-white flex flex-col fixed h-full z-50">
+  <div class="p-8 flex items-center gap-3">
+    <div class="w-9 h-9 bg-blue-600 rounded flex items-center justify-center shadow-lg shadow-blue-500/20">
+      <iconify-icon icon="lucide:shield-check" class="text-xl"></iconify-icon>
+    </div>
+    <span class="font-display font-bold text-2xl tracking-tight">SENTINEL</span>
+  </div>
+  
+  <nav class="flex-1 px-4 py-4 space-y-2">
+    <a :href="dashboardHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'dashboard' }">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Dashboard</span>
+    </a>
+    <a :href="triageHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'triage' }">
+      <iconify-icon icon="lucide:list-todo" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Triage Queue</span>
+      <span v-if="triageBadgeCount > 0" class="ml-auto bg-red-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{{ triageBadgeCount }}</span>
+    </a>
+    <a :href="casesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'cases' }">
+      <iconify-icon icon="lucide:briefcase" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Cases</span>
+    </a>
+    <a :href="schemesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'schemes' }">
+      <iconify-icon icon="lucide:landmark" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Schemes</span>
+    </a>
+    <a :href="opsToolsHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'ops' }">
+      <iconify-icon icon="lucide:wrench" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Ops Tools</span>
+    </a>
+    <a :href="auditHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'audit' }">
+      <iconify-icon icon="lucide:clipboard-list" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Audit Log</span>
+    </a>
+  </nav>
+
+  <div class="p-6 border-t border-slate-800">
+    <a :href="settingsHref" class="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-white transition-all text-sm group">
+      <iconify-icon icon="lucide:settings" class="group-hover:rotate-45 transition-transform"></iconify-icon>
+      <span>Settings</span>
+    </a>
+    <div class="mt-6 flex items-center gap-3 px-4">
+      <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold border-2 border-slate-600">{{ userInitials }}</div>
+      <div>
+        <p class="text-sm font-semibold">{{ userName }}</p>
+        <p class="text-[11px] text-slate-500">{{ userRole }}</p>
+      </div>
+    </div>
+  </div>
+</aside>
+</div>
+<!-- /component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+
+    <!-- Main Content Area -->
+    <main class="flex-1 ml-64 p-10" style="view-transition-name: main-content">
+      <!-- Header -->
+      <header class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-3xl font-display font-bold text-slate-900">Audit Log</h1>
+          <p class="text-sm text-slate-500 mt-1">Comprehensive historical trail of all operational actions and system events.</p>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <button id="export-csv-btn" class="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all refined-shadow">
+            <iconify-icon icon="lucide:download" class="text-lg"></iconify-icon>
+            Export to CSV
+          </button>
+          <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full refined-shadow refined-border">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <span class="text-xs font-bold text-slate-700">Logging Active</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Filters & Search -->
+      <div class="bg-white p-5 rounded-2xl refined-border refined-shadow mb-8">
+        <div class="flex flex-wrap items-center gap-4">
+          <div class="flex-1 min-w-[300px] relative">
+            <iconify-icon icon="lucide:search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></iconify-icon>
+            <input type="text" placeholder="Search by Case ID, User, or Keyword..." class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <select class="bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+              <option>All Actions</option>
+              <option>Case Created</option>
+              <option>Triage Completed</option>
+              <option>Scheme Stop Initiated</option>
+              <option>Communication Sent</option>
+              <option>Note Added</option>
+            </select>
+
+            <select class="bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+              <option>All Users</option>
+              <option>John Doe</option>
+              <option>Sarah Jenkins</option>
+              <option>System AI</option>
+              <option>Admin Console</option>
+            </select>
+
+            <div class="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl">
+              <iconify-icon icon="lucide:calendar" class="text-slate-400"></iconify-icon>
+              <input type="text" value="2023-10-20 to 2023-10-24" class="text-sm font-medium text-slate-600 focus:outline-none w-44 bg-transparent">
+            </div>
+
+            <button class="p-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors">
+              <iconify-icon icon="lucide:filter" class="text-lg"></iconify-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit Table -->
+      <div class="bg-white rounded-[2rem] refined-border refined-shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-100">
+                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Timestamp (ISO 8601)</th>
+                <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">User</th>
+                <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Action</th>
+                <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Details</th>
+                <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Affected Case</th>
+                <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Outcome</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <!-- Row 1 -->
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-8 py-6 text-xs font-mono font-medium text-slate-500">2023-10-24T09:44:12Z</td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 bg-blue-100 text-blue-700 flex items-center justify-center rounded-full text-[10px] font-bold">JD</span>
+                    <span class="text-sm font-bold text-slate-900">John Doe</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2 text-blue-600">
+                    <iconify-icon icon="lucide:shield-off"></iconify-icon>
+                    <span class="text-xs font-black uppercase tracking-wide">Scheme Stop Initiated</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <p class="text-xs text-slate-600 max-w-xs leading-relaxed">Triggered manual BECS scheme stop for batch 882190 after client confirmation.</p>
+                </td>
+                <td class="px-6 py-6">
+                  <a href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" id="case-link-1" class="text-xs font-bold text-blue-600 hover:underline">XYZ123-BECS</a>
+                </td>
+                <td class="px-8 py-6">
+                  <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded text-[10px] font-black uppercase">Success</span>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-8 py-6 text-xs font-mono font-medium text-slate-500">2023-10-24T09:42:08Z</td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 bg-indigo-100 text-indigo-700 flex items-center justify-center rounded-full">
+                      <iconify-icon icon="lucide:sparkles" class="text-sm"></iconify-icon>
+                    </div>
+                    <span class="text-sm font-bold text-slate-900">System AI</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2 text-indigo-600">
+                    <iconify-icon icon="lucide:sparkle"></iconify-icon>
+                    <span class="text-xs font-black uppercase tracking-wide">Triage Completed</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <p class="text-xs text-slate-600 max-w-xs leading-relaxed">Sentiment: Urgent. Confidence: 92%. Reason: Fat finger error detected in OCR.</p>
+                </td>
+                <td class="px-6 py-6">
+                  <a href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" id="case-link-2" class="text-xs font-bold text-blue-600 hover:underline">XYZ123-BECS</a>
+                </td>
+                <td class="px-8 py-6">
+                  <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded text-[10px] font-black uppercase">Success</span>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-8 py-6 text-xs font-mono font-medium text-slate-500">2023-10-24T09:40:15Z</td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 bg-slate-100 text-slate-700 flex items-center justify-center rounded-full text-[10px] font-bold">SJ</span>
+                    <span class="text-sm font-bold text-slate-900">Sarah Jenkins</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2 text-slate-600">
+                    <iconify-icon icon="lucide:mail"></iconify-icon>
+                    <span class="text-xs font-black uppercase tracking-wide">Communication Sent</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <p class="text-xs text-slate-600 max-w-xs leading-relaxed">Sent recall status update to client.ops@globaltrade.com.</p>
+                </td>
+                <td class="px-6 py-6">
+                  <a href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" id="case-link-3" class="text-xs font-bold text-blue-600 hover:underline">XYZ123-BECS</a>
+                </td>
+                <td class="px-8 py-6">
+                  <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-100 rounded text-[10px] font-black uppercase">Success</span>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-8 py-6 text-xs font-mono font-medium text-slate-500">2023-10-24T09:35:00Z</td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 bg-blue-100 text-blue-700 flex items-center justify-center rounded-full text-[10px] font-bold">JD</span>
+                    <span class="text-sm font-bold text-slate-900">John Doe</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2 text-slate-600">
+                    <iconify-icon icon="lucide:sticky-note"></iconify-icon>
+                    <span class="text-xs font-black uppercase tracking-wide">Note Added</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <p class="text-xs text-slate-600 max-w-xs leading-relaxed">"Waiting for secondary VP approval for final settlement reversal."</p>
+                </td>
+                <td class="px-6 py-6">
+                  <a href="#" id="case-link-4" class="text-xs font-bold text-blue-600 hover:underline">ABC991-BECS</a>
+                </td>
+                <td class="px-8 py-6">
+                  <span class="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-100 rounded text-[10px] font-black uppercase">Pending</span>
+                </td>
+              </tr>
+              <!-- Row 5 -->
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-8 py-6 text-xs font-mono font-medium text-slate-500">2023-10-24T09:30:45Z</td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 bg-red-100 text-red-700 flex items-center justify-center rounded-full">
+                      <iconify-icon icon="lucide:shield-alert" class="text-sm"></iconify-icon>
+                    </div>
+                    <span class="text-sm font-bold text-slate-900">System AI</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <div class="flex items-center gap-2 text-red-600">
+                    <iconify-icon icon="lucide:alert-triangle"></iconify-icon>
+                    <span class="text-xs font-black uppercase tracking-wide">Scheme Stop Failed</span>
+                  </div>
+                </td>
+                <td class="px-6 py-6">
+                  <p class="text-xs text-slate-600 max-w-xs leading-relaxed">API Timeout Error while communicating with Clearing House. Auto-retry initiated.</p>
+                </td>
+                <td class="px-6 py-6">
+                  <a href="#" id="case-link-5" class="text-xs font-bold text-blue-600 hover:underline">ERR881-BECS</a>
+                </td>
+                <td class="px-8 py-6">
+                  <span class="px-2 py-1 bg-red-50 text-red-700 border border-red-100 rounded text-[10px] font-black uppercase">Failed</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-8 py-5 border-t border-slate-100 flex items-center justify-between">
+          <p class="text-xs font-medium text-slate-500">Showing 1 to 5 of 1,248 entries</p>
+          <div class="flex items-center gap-2">
+            <button class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-400 cursor-not-allowed">Previous</button>
+            <div class="flex items-center gap-1">
+              <button class="w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-lg text-xs font-bold">1</button>
+              <button class="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50">2</button>
+              <button class="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50">3</button>
+              <span class="px-1 text-slate-400">...</span>
+              <button class="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50">250</button>
+            </div>
+            <button class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">Next</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

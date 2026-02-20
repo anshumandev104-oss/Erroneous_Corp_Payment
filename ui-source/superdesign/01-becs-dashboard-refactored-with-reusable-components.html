@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="view-transition" content="same-origin">
+  <title>BECS Recall Agent - AI Payment Ops</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <!-- Prefetch flow pages for instant navigation -->
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/9cdb6f33-d486-4996-b25f-e50d06dc9043" as="document">
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&f[]=satoshi@400,500,700&f[]=jet-brains-mono@400&display=swap');
+
+    :root {
+      --bank-blue: #0052FF;
+      --bank-navy: #0F172A;
+      --bank-gray: #F8FAFC;
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-display {
+      font-family: 'General Sans', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .urgency-pulse {
+      animation: pulse-intense 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .banner-pulse {
+      animation: banner-glow 3s infinite ease-in-out;
+    }
+
+    @keyframes pulse-intense {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.02); }
+    }
+
+    @keyframes banner-glow {
+      0%, 100% { background-color: #ef4444; } /* red-500 */
+      50% { background-color: #dc2626; } /* red-600 */
+    }
+
+    .refined-shadow {
+      box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.08);
+    }
+
+    .refined-border {
+      border: 1px solid #e2e8f0; /* slate-200 */
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    @view-transition { navigation: auto; }
+    ::view-transition-old(main-content) { animation: 300ms ease-out both fade-out; }
+    ::view-transition-new(main-content) { animation: 300ms ease-in both fade-in; }
+    @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+  <style>sd-component { display: block; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+</head>
+<body>
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <!-- component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+<div v-scope="{ ...{&quot;activeItem&quot;:&quot;triage&quot;,&quot;triageBadgeCount&quot;:4,&quot;dashboardHref&quot;:&quot;https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7&quot;,&quot;triageHref&quot;:&quot;https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930&quot;,&quot;casesHref&quot;:&quot;https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96&quot;,&quot;schemesHref&quot;:&quot;https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d&quot;,&quot;opsToolsHref&quot;:&quot;https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1&quot;,&quot;auditHref&quot;:&quot;https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2&quot;,&quot;settingsHref&quot;:&quot;#settings&quot;,&quot;userName&quot;:&quot;John Doe&quot;,&quot;userRole&quot;:&quot;Payment Ops II&quot;,&quot;userInitials&quot;:&quot;JD&quot;}, $emit() {} }">
+<aside class="w-64 bg-slate-900 text-white flex flex-col fixed h-full z-50">
+  <div class="p-8 flex items-center gap-3">
+    <div class="w-9 h-9 bg-blue-600 rounded flex items-center justify-center shadow-lg shadow-blue-500/20">
+      <iconify-icon icon="lucide:shield-check" class="text-xl"></iconify-icon>
+    </div>
+    <span class="font-display font-bold text-2xl tracking-tight">SENTINEL</span>
+  </div>
+  
+  <nav class="flex-1 px-4 py-4 space-y-2">
+    <a :href="dashboardHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'dashboard' }">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Dashboard</span>
+    </a>
+    <a :href="triageHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'triage' }">
+      <iconify-icon icon="lucide:list-todo" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Triage Queue</span>
+      <span v-if="triageBadgeCount > 0" class="ml-auto bg-red-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{{ triageBadgeCount }}</span>
+    </a>
+    <a :href="casesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'cases' }">
+      <iconify-icon icon="lucide:briefcase" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Cases</span>
+    </a>
+    <a :href="schemesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'schemes' }">
+      <iconify-icon icon="lucide:landmark" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Schemes</span>
+    </a>
+    <a :href="opsToolsHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'ops' }">
+      <iconify-icon icon="lucide:wrench" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Ops Tools</span>
+    </a>
+    <a :href="auditHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'audit' }">
+      <iconify-icon icon="lucide:clipboard-list" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Audit Log</span>
+    </a>
+  </nav>
+
+  <div class="p-6 border-t border-slate-800">
+    <a :href="settingsHref" class="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-white transition-all text-sm group">
+      <iconify-icon icon="lucide:settings" class="group-hover:rotate-45 transition-transform"></iconify-icon>
+      <span>Settings</span>
+    </a>
+    <div class="mt-6 flex items-center gap-3 px-4">
+      <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold border-2 border-slate-600">{{ userInitials }}</div>
+      <div>
+        <p class="text-sm font-semibold">{{ userName }}</p>
+        <p class="text-[11px] text-slate-500">{{ userRole }}</p>
+      </div>
+    </div>
+  </div>
+</aside>
+</div>
+<!-- /component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-10" style="view-transition-name: main-content">
+      <header class="flex justify-between items-center mb-10">
+        <div class="flex items-center gap-3 text-sm text-slate-500">
+          <a id="breadcrumb-queue-link" href="https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930" class="hover:text-blue-600 transition-colors">Triage Queue</a>
+          <iconify-icon icon="lucide:chevron-right" class="text-slate-300"></iconify-icon>
+          <span class="text-slate-900 font-semibold">Case XYZ123-BECS</span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full refined-shadow refined-border">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            </span>
+            <span class="text-xs font-bold text-slate-700 tracking-wide">AI System Online</span>
+          </div>
+          <button id="header-notify-btn" class="w-10 h-10 flex items-center justify-center bg-white rounded-full refined-border refined-shadow hover:bg-slate-50 transition-all">
+            <iconify-icon icon="lucide:bell" class="text-slate-600 text-lg"></iconify-icon>
+          </button>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-12 gap-8">
+        <!-- Left Column -->
+        <section class="col-span-12 lg:col-span-8 space-y-8">
+          <!-- Hero Case Summary -->
+          <div class="bg-white rounded-[2rem] refined-border refined-shadow overflow-hidden">
+            <div class="banner-pulse px-8 py-4 flex items-center justify-between text-white">
+              <div class="flex items-center gap-3">
+                <iconify-icon icon="lucide:alert-octagon" class="text-2xl"></iconify-icon>
+                <span class="text-sm font-extrabold uppercase tracking-[0.1em]">High Urgency • BECS Recall Request</span>
+              </div>
+              <a id="nav-case-review-link" href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" class="flex items-center gap-2 text-xs font-semibold bg-white/20 hover:bg-white/30 transition-all px-3 py-1 rounded-full">
+                <iconify-icon icon="lucide:clock"></iconify-icon>
+                Created 4m ago • In Review
+              </a>
+            </div>
+
+            <div class="p-10 flex flex-col md:flex-row gap-12 items-center">
+              <div class="flex-1 space-y-6">
+                <div class="flex items-baseline gap-4">
+                  <h1 class="text-5xl font-display font-extrabold text-slate-900 tracking-tight">$48,250.00</h1>
+                  <div class="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold border border-blue-100 tracking-wider">REF: XYZ123</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-y-5 gap-x-8 text-sm">
+                  <div class="space-y-1">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sender Name</p>
+                    <p class="font-bold text-slate-800">Global Trade Corp (882190)</p>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Corporate RM</p>
+                    <p class="font-bold text-slate-800">Sarah Jenkins</p>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Submission Timestamp</p>
+                    <p class="font-bold text-slate-800">Oct 24, 2023 • 09:12:04</p>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Recall Type</p>
+                    <p class="font-bold text-blue-600">Pre-Settlement Intercept</p>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 pt-4">
+                  <span class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-[11px] font-extrabold tracking-wide uppercase">Incorrect Amount</span>
+                  <span class="px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-[11px] font-extrabold tracking-wide border border-emerald-100 uppercase">Verified Intent</span>
+                  <span class="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-[11px] font-extrabold tracking-wide border border-purple-100 uppercase">High Probability</span>
+                </div>
+              </div>
+
+              <div class="flex flex-col items-center gap-4 relative">
+                <div class="relative flex items-center justify-center p-8 bg-blue-50/40 rounded-full border border-blue-100 shadow-[0_0_40px_rgba(0,82,255,0.12)]">
+                  <svg class="w-48 h-48 transform -rotate-90">
+                    <circle cx="96" cy="96" r="88" stroke="currentColor" stroke-width="12" fill="transparent" class="text-slate-200/50"/>
+                    <circle cx="96" cy="96" r="88" stroke="currentColor" stroke-width="12" fill="transparent" stroke-dasharray="552.6" stroke-dashoffset="44.2" class="text-blue-600 drop-shadow-[0_0_8px_rgba(0,82,255,0.4)] transition-all duration-1000"/>
+                  </svg>
+                  <div class="absolute flex flex-col items-center justify-center">
+                    <span class="text-6xl font-display font-black text-slate-900">92<span class="text-3xl">%</span></span>
+                    <span class="text-[11px] font-extrabold text-blue-600 uppercase tracking-widest mt-1">Confidence</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Triage Analysis -->
+          <div class="bg-slate-50/50 rounded-[2rem] refined-border refined-shadow p-10 space-y-8">
+            <div class="flex items-center justify-between">
+              <h2 class="font-display font-bold text-xl text-slate-900 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                  <iconify-icon icon="lucide:sparkles"></iconify-icon>
+                </div>
+                AI Triage Intelligence
+              </h2>
+              <div class="px-5 py-2 bg-white rounded-full border border-orange-100 refined-shadow flex items-center gap-3">
+                <iconify-icon icon="lucide:hourglass" class="text-orange-500 animate-spin-slow"></iconify-icon>
+                <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Settlement: <span class="text-orange-600 text-sm font-black urgency-pulse ml-1">18m 42s</span></span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div class="space-y-5">
+                <div class="p-6 bg-white rounded-2xl refined-border space-y-4">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Detected Intent Text</h3>
+                    <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold">OCR VERIFIED</span>
+                  </div>
+                  <p class="text-xs leading-[1.8] font-mono p-4 bg-slate-50 rounded-xl border border-slate-100 text-slate-600 italic">
+                    "URGENT: Transaction XYZ123 sent this morning was for $48,250 but should have been $4,825. Please stop the BECS batch immediately. Our RM Sarah is CC'd."
+                  </p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="p-4 bg-blue-600 rounded-2xl text-center shadow-lg shadow-blue-600/10">
+                    <div class="text-[10px] text-blue-100 uppercase font-bold tracking-widest mb-1">Priority</div>
+                    <div class="text-sm font-black text-white">CRITICAL</div>
+                  </div>
+                  <div class="p-4 bg-white border border-red-200 rounded-2xl text-center">
+                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">Error Mode</div>
+                    <div class="text-sm font-black text-red-600">FAT FINGER</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-5">
+                <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Entity Extraction</h3>
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center p-4 bg-white rounded-xl refined-border text-sm">
+                    <div class="flex items-center gap-3 text-slate-500">
+                      <iconify-icon icon="lucide:university" class="text-blue-500 text-lg"></iconify-icon>
+                      Beneficiary Bank
+                    </div>
+                    <span class="font-bold text-slate-900">WESTPAC (032-002)</span>
+                  </div>
+                  <div class="flex justify-between items-center p-4 bg-white rounded-xl refined-border text-sm">
+                    <div class="flex items-center gap-3 text-slate-500">
+                      <iconify-icon icon="lucide:hash" class="text-blue-500 text-lg"></iconify-icon>
+                      Account End
+                    </div>
+                    <span class="font-bold text-slate-900">**** 8812</span>
+                  </div>
+                  <div class="flex justify-between items-center p-4 bg-white rounded-xl refined-border text-sm">
+                    <div class="flex items-center gap-3 text-slate-500">
+                      <iconify-icon icon="lucide:shield-check" class="text-blue-500 text-lg"></iconify-icon>
+                      RM Status
+                    </div>
+                    <span class="font-bold text-emerald-600 flex items-center gap-1.5">
+                      <iconify-icon icon="lucide:check-circle"></iconify-icon>
+                      Authenticated
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Component -->
+          <div class="bg-slate-50/50 rounded-[2rem] refined-border refined-shadow p-10">
+            <h2 class="font-display font-bold text-xl text-slate-900 mb-10">Audit Trail & Timeline</h2>
+            <div class="relative flex items-center justify-between px-8 mb-10">
+              <div class="absolute h-1 bg-slate-200 top-5 left-12 right-12 z-0 rounded-full"></div>
+              
+              <div class="relative z-10 flex flex-col items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center border-4 border-white shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                  <iconify-icon icon="lucide:mail" class="text-lg"></iconify-icon>
+                </div>
+                <div class="text-center">
+                  <p class="text-[10px] font-black text-slate-900 tracking-wider">RECEIVED</p>
+                  <p class="text-[10px] font-bold text-slate-400 mt-0.5">09:14:02</p>
+                </div>
+              </div>
+
+              <div class="relative z-10 flex flex-col items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center border-4 border-white shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                  <iconify-icon icon="lucide:brain-circuit" class="text-lg"></iconify-icon>
+                </div>
+                <div class="text-center">
+                  <p class="text-[10px] font-black text-slate-900 tracking-wider">AI TRIAGED</p>
+                  <p class="text-[10px] font-bold text-slate-400 mt-0.5">09:14:08</p>
+                </div>
+              </div>
+
+              <div class="relative z-10 flex flex-col items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center border-4 border-white shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                  <iconify-icon icon="lucide:file-plus-2" class="text-lg"></iconify-icon>
+                </div>
+                <div class="text-center">
+                  <p class="text-[10px] font-black text-slate-900 tracking-wider">CASE OPEN</p>
+                  <p class="text-[10px] font-bold text-slate-400 mt-0.5">09:14:15</p>
+                </div>
+              </div>
+
+              <div class="relative z-10 flex flex-col items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center border-4 border-white">
+                  <iconify-icon icon="lucide:check-circle" class="text-lg"></iconify-icon>
+                </div>
+                <div class="text-center">
+                  <p class="text-[10px] font-black text-slate-300 tracking-wider">ACTIONED</p>
+                  <p class="text-[10px] font-bold text-slate-300 mt-0.5">PENDING</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 bg-blue-600/5 rounded-2xl border border-blue-100 flex items-center gap-6">
+              <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
+                <iconify-icon icon="lucide:zap" class="text-3xl animate-pulse"></iconify-icon>
+              </div>
+              <div>
+                <p class="text-sm font-black text-blue-900 uppercase tracking-wide">Scenario A: Optimal Recovery Window</p>
+                <p class="text-xs text-blue-700/80 font-medium leading-relaxed mt-1">Action initiated within the pre-settlement window. Funds are 100% recoverable via instant scheme intercept.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Column (Actions & Risks) -->
+        <section class="col-span-12 lg:col-span-4 space-y-8">
+          <!-- Risk Monitor -->
+          <!-- component: SLARiskMonitor (1a9a8196-ed77-4a26-b166-19a35bc5c61d) -->
+<div v-scope="{ ...{&quot;slaCountdown&quot;:&quot;04:22:15&quot;,&quot;riskTitle1&quot;:&quot;Operational Risk:&quot;,&quot;riskMessage1&quot;:&quot;The recall window is closing. If batch lock fails, trigger client self-service portal immediately.&quot;,&quot;riskTitle2&quot;:&quot;Policy Notice:&quot;,&quot;riskMessage2&quot;:&quot;High-value transaction detected. Secondary VP approval required post-recall action.&quot;}, $emit() {} }">
+<div class="bg-slate-900 rounded-[2rem] p-10 text-white shadow-2xl shadow-slate-900/20 relative overflow-hidden">
+  <div class="absolute top-0 right-0 p-8 opacity-10">
+    <iconify-icon icon="lucide:shield-alert" class="text-8xl"></iconify-icon>
+  </div>
+  
+  <div class="flex items-center justify-between mb-10 relative z-10">
+    <h2 class="font-display font-bold text-xl tracking-tight">SLA & Risk Monitor</h2>
+    <iconify-icon @click="$emit('helpClick')" icon="lucide:info" class="text-slate-500 hover:text-white transition-colors cursor-help"></iconify-icon>
+  </div>
+
+  <div class="text-center mb-10 relative z-10">
+    <div class="text-5xl font-mono font-black text-orange-400 tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(251,146,60,0.3)]">
+      {{ slaCountdown }}
+    </div>
+    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-3">Time to Hard Settlement</div>
+  </div>
+
+  <div class="space-y-4 relative z-10">
+    <div class="p-4 bg-slate-800/40 rounded-2xl border border-slate-700/50 flex gap-4 transition-all hover:bg-slate-800/60 group">
+      <iconify-icon icon="lucide:triangle-alert" class="text-orange-400 text-xl shrink-0 group-hover:scale-110 transition-transform"></iconify-icon>
+      <p class="text-[11px] leading-relaxed text-slate-400 font-medium">
+        <span class="text-white font-black block mb-1">{{ riskTitle1 }}</span> 
+        {{ riskMessage1 }}
+      </p>
+    </div>
+    <div class="p-4 bg-red-500/5 rounded-2xl border border-red-500/20 flex gap-4 transition-all hover:bg-red-500/10 group">
+      <iconify-icon icon="lucide:shield-alert" class="text-red-400 text-xl shrink-0 group-hover:scale-110 transition-transform"></iconify-icon>
+      <p class="text-[11px] leading-relaxed text-slate-400 font-medium">
+        <span class="text-white font-black block mb-1">{{ riskTitle2 }}</span> 
+        {{ riskMessage2 }}
+      </p>
+    </div>
+  </div>
+</div>
+</div>
+<!-- /component: SLARiskMonitor (1a9a8196-ed77-4a26-b166-19a35bc5c61d) -->
+
+          <!-- Action Panel -->
+          <!-- component: ActionPanel (ec98a3f2-dcbf-4874-a2fe-1998b4231a65) -->
+<div v-scope="{ ...{&quot;commEmailTo&quot;:&quot;client.ops@globaltrade.com&quot;,&quot;commSubject&quot;:&quot;Recall Status: XYZ123&quot;,&quot;commPreview&quot;:&quot;We have successfully initialized the scheme intercept for your batch payment of $48,250.00. The recall is pending...&quot;,&quot;schemeStopHref&quot;:&quot;#stop&quot;,&quot;returnRequestHref&quot;:&quot;#return&quot;,&quot;beneficiaryOutreachHref&quot;:&quot;#outreach&quot;}, $emit() {} }">
+<div class="bg-white rounded-[2.5rem] border border-[#e2e8f0] shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)] p-10 space-y-10">
+  <div class="space-y-2">
+    <h2 class="font-display font-bold text-xl text-slate-900">Recall Actions</h2>
+    <p class="text-xs text-slate-400 font-medium italic">AI-recommended next steps</p>
+  </div>
+
+  <div class="space-y-4">
+    <a :href="schemeStopHref" class="w-full flex items-center justify-between pl-6 pr-5 py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all shadow-xl shadow-blue-500/20 group">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:bg-white/20 transition-colors">
+          <iconify-icon icon="lucide:stop-circle" class="text-2xl"></iconify-icon>
+        </div>
+        <span class="font-black text-sm tracking-wide">Initiate Scheme Stop</span>
+      </div>
+      <iconify-icon icon="lucide:chevron-right" class="text-xl group-hover:translate-x-1 transition-transform"></iconify-icon>
+    </a>
+
+    <a :href="returnRequestHref" class="w-full flex items-center justify-between pl-6 pr-5 py-5 bg-white border border-slate-200 text-slate-700 hover:border-blue-600 hover:text-blue-600 rounded-2xl transition-all font-bold text-sm group">
+      <div class="flex items-center gap-4">
+        <iconify-icon icon="lucide:undo-2" class="text-xl group-hover:scale-110 transition-transform"></iconify-icon>
+        <span>Return Request</span>
+      </div>
+      <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+    </a>
+
+    <a :href="beneficiaryOutreachHref" class="w-full flex items-center justify-between pl-6 pr-5 py-5 bg-white border border-slate-200 text-slate-700 hover:border-blue-600 hover:text-blue-600 rounded-2xl transition-all font-bold text-sm group">
+      <div class="flex items-center gap-4">
+        <iconify-icon icon="lucide:phone-forwarded" class="text-xl group-hover:scale-110 transition-transform"></iconify-icon>
+        <span>Beneficiary Outreach</span>
+      </div>
+      <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+    </a>
+  </div>
+
+  <div class="pt-8 border-t border-slate-100">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Draft Comms</h3>
+      <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">AUTO-GENERATED</span>
+    </div>
+    <div class="p-5 bg-slate-50/50 rounded-2xl border border-slate-200 text-[11px] text-slate-600 space-y-3 shadow-inner">
+      <div class="flex gap-2">
+        <span class="font-black text-slate-900">To:</span> {{ commEmailTo }}
+      </div>
+      <div class="flex gap-2">
+        <span class="font-black text-slate-900">Sub:</span> {{ commSubject }}
+      </div>
+      <p class="italic leading-relaxed border-t border-slate-100 pt-3">{{ commPreview }}</p>
+    </div>
+    <button @click="$emit('editTemplate')" class="w-full mt-4 text-[11px] font-black text-blue-600 hover:text-blue-800 flex items-center justify-center gap-2 group transition-colors uppercase tracking-widest">
+      <iconify-icon icon="lucide:edit-3" class="group-hover:-translate-y-0.5 transition-transform"></iconify-icon>
+      Modify Template
+    </button>
+  </div>
+</div>
+</div>
+<!-- /component: ActionPanel (ec98a3f2-dcbf-4874-a2fe-1998b4231a65) -->
+          <div class="px-4">
+            <a id="nav-comm-editor-btn" href="https://p.superdesign.dev/draft/9cdb6f33-d486-4996-b25f-e50d06dc9043" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center justify-center gap-2 py-3 bg-white rounded-xl border border-slate-100 refined-shadow group transition-all">
+              <iconify-icon icon="lucide:settings-2" class="text-slate-400 group-hover:text-blue-600"></iconify-icon>
+              Edit Communication Templates
+            </a>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

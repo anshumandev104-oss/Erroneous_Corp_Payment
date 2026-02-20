@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Overview | BECS Recall Agent</title>
+  <meta name="view-transition" content="same-origin">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&f[]=satoshi@400,500,700&f[]=jet-brains-mono@400&display=swap');
+
+    :root {
+      --bank-blue: #0052FF;
+      --bank-navy: #0F172A;
+      --bank-gray: #F8FAFC;
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-display {
+      font-family: 'General Sans', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .refined-shadow {
+      box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.08);
+    }
+
+    .refined-border {
+      border: 1px solid #e2e8f0;
+    }
+
+    @view-transition {
+      navigation: auto;
+    }
+
+    ::view-transition-old(main-nav),
+    ::view-transition-new(main-nav) {
+      animation: none;
+      mix-blend-mode: normal;
+    }
+
+    ::view-transition-old(main-content) {
+      animation: 0.25s ease-out both fade-out;
+    }
+    ::view-transition-new(main-content) {
+      animation: 0.25s ease-in 0.1s both fade-in;
+    }
+
+    @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+    .stat-card-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 10px;
+    }
+  </style>
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/dc48f744-c63b-4dce-a1f9-31dce512d2ec" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/9cdb6f33-d486-4996-b25f-e50d06dc9043" as="document">
+  <style>sd-component { display: block; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+</head>
+<body>
+  <div class="flex min-h-screen">
+    <!-- Persistent Navigation -->
+    <div style="view-transition-name: main-nav">
+      <!-- component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+<div v-scope="{ ...{&quot;activeItem&quot;:&quot;dashboard&quot;,&quot;triageBadgeCount&quot;:4,&quot;dashboardHref&quot;:&quot;https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7&quot;,&quot;triageHref&quot;:&quot;https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930&quot;,&quot;casesHref&quot;:&quot;https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96&quot;,&quot;schemesHref&quot;:&quot;https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d&quot;,&quot;opsToolsHref&quot;:&quot;https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1&quot;,&quot;auditHref&quot;:&quot;https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2&quot;,&quot;settingsHref&quot;:&quot;#settings&quot;,&quot;userName&quot;:&quot;John Doe&quot;,&quot;userRole&quot;:&quot;Payment Ops II&quot;,&quot;userInitials&quot;:&quot;JD&quot;}, $emit() {} }">
+<aside class="w-64 bg-slate-900 text-white flex flex-col fixed h-full z-50">
+  <div class="p-8 flex items-center gap-3">
+    <div class="w-9 h-9 bg-blue-600 rounded flex items-center justify-center shadow-lg shadow-blue-500/20">
+      <iconify-icon icon="lucide:shield-check" class="text-xl"></iconify-icon>
+    </div>
+    <span class="font-display font-bold text-2xl tracking-tight">SENTINEL</span>
+  </div>
+  
+  <nav class="flex-1 px-4 py-4 space-y-2">
+    <a :href="dashboardHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'dashboard' }">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Dashboard</span>
+    </a>
+    <a :href="triageHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'triage' }">
+      <iconify-icon icon="lucide:list-todo" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Triage Queue</span>
+      <span v-if="triageBadgeCount > 0" class="ml-auto bg-red-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{{ triageBadgeCount }}</span>
+    </a>
+    <a :href="casesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'cases' }">
+      <iconify-icon icon="lucide:briefcase" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Cases</span>
+    </a>
+    <a :href="schemesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'schemes' }">
+      <iconify-icon icon="lucide:landmark" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Schemes</span>
+    </a>
+    <a :href="opsToolsHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'ops' }">
+      <iconify-icon icon="lucide:wrench" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Ops Tools</span>
+    </a>
+    <a :href="auditHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'audit' }">
+      <iconify-icon icon="lucide:clipboard-list" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Audit Log</span>
+    </a>
+  </nav>
+
+  <div class="p-6 border-t border-slate-800">
+    <a :href="settingsHref" class="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-white transition-all text-sm group">
+      <iconify-icon icon="lucide:settings" class="group-hover:rotate-45 transition-transform"></iconify-icon>
+      <span>Settings</span>
+    </a>
+    <div class="mt-6 flex items-center gap-3 px-4">
+      <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold border-2 border-slate-600">{{ userInitials }}</div>
+      <div>
+        <p class="text-sm font-semibold">{{ userName }}</p>
+        <p class="text-[11px] text-slate-500">{{ userRole }}</p>
+      </div>
+    </div>
+  </div>
+</aside>
+</div>
+<!-- /component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+    </div>
+
+    <!-- Main Content Area -->
+    <main style="view-transition-name: main-content" class="flex-1 ml-64 p-10">
+      <header class="flex justify-between items-start mb-10">
+        <div>
+          <h1 class="text-3xl font-display font-bold text-slate-900">Dashboard Overview</h1>
+          <p class="text-slate-500 mt-1">Operational status for BECS recall processing.</p>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full refined-shadow refined-border">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            </span>
+            <span class="text-xs font-bold text-slate-700 tracking-wide">AI Engine Processing</span>
+          </div>
+          <button id="header-notify-btn" class="w-10 h-10 flex items-center justify-center bg-white rounded-full refined-border refined-shadow hover:bg-slate-50 transition-all">
+            <iconify-icon icon="lucide:bell" class="text-slate-600 text-lg"></iconify-icon>
+          </button>
+        </div>
+      </header>
+
+      <!-- Metrics Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-2xl refined-border refined-shadow stat-card-gradient">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+              <iconify-icon icon="lucide:inbox" class="text-xl"></iconify-icon>
+            </div>
+            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">+12% vs LW</span>
+          </div>
+          <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Cases Pending</p>
+          <p class="text-3xl font-display font-extrabold text-slate-900 mt-1">142</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl refined-border refined-shadow stat-card-gradient">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-orange-50 text-orange-600 rounded-lg flex items-center justify-center">
+              <iconify-icon icon="lucide:timer" class="text-xl"></iconify-icon>
+            </div>
+            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">-2m improvement</span>
+          </div>
+          <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Avg. Resolution Time</p>
+          <p class="text-3xl font-display font-extrabold text-slate-900 mt-1">18m 24s</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl refined-border refined-shadow stat-card-gradient">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+              <iconify-icon icon="lucide:shield-check" class="text-xl"></iconify-icon>
+            </div>
+            <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Goal: 95%</span>
+          </div>
+          <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">SLA Compliance %</p>
+          <p class="text-3xl font-display font-extrabold text-slate-900 mt-1">98.4%</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl refined-border refined-shadow stat-card-gradient">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center">
+              <iconify-icon icon="lucide:activity" class="text-xl"></iconify-icon>
+            </div>
+            <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Real-time</span>
+          </div>
+          <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Throughput (Hr)</p>
+          <p class="text-3xl font-display font-extrabold text-slate-900 mt-1">34 Cases</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-8">
+        <!-- Main Table & Filters Column -->
+        <div class="col-span-12 xl:col-span-8 space-y-8">
+          <div class="bg-white rounded-[2rem] refined-border refined-shadow overflow-hidden">
+            <!-- Filters & Urgency Summary -->
+            <div class="p-8 border-b border-slate-100 bg-slate-50/30">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <h2 class="font-display font-bold text-xl text-slate-900">Active Recall Queue</h2>
+                <div class="flex items-center gap-2">
+                  <button id="filter-btn-all" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-bold transition-all shadow-md">All Systems</button>
+                  <button id="filter-btn-becs" class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-all">BECS Only</button>
+                  <button id="filter-btn-swift" class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-lg text-sm font-bold hover:bg-slate-50 transition-all">SWIFT</button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-4 gap-4">
+                <div class="flex flex-col p-4 bg-red-50 rounded-xl border border-red-100">
+                  <span class="text-[10px] font-bold text-red-400 uppercase tracking-widest">Critical</span>
+                  <span class="text-xl font-display font-bold text-red-600">12</span>
+                </div>
+                <div class="flex flex-col p-4 bg-orange-50 rounded-xl border border-orange-100">
+                  <span class="text-[10px] font-bold text-orange-400 uppercase tracking-widest">High</span>
+                  <span class="text-xl font-display font-bold text-orange-600">45</span>
+                </div>
+                <div class="flex flex-col p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Medium</span>
+                  <span class="text-xl font-display font-bold text-blue-600">68</span>
+                </div>
+                <div class="flex flex-col p-4 bg-slate-100 rounded-xl border border-slate-200">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Low</span>
+                  <span class="text-xl font-display font-bold text-slate-500">17</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                    <th class="px-8 py-5">Ref / Status</th>
+                    <th class="px-8 py-5">Amount</th>
+                    <th class="px-8 py-5">Sender</th>
+                    <th class="px-8 py-5">Created</th>
+                    <th class="px-8 py-5 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                  <tr class="hover:bg-slate-50/50 transition-colors group">
+                    <td class="px-8 py-6">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-black text-slate-900">XYZ123</span>
+                        <span class="text-[10px] flex items-center gap-1.5 text-red-600 font-bold uppercase mt-1">
+                          <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                          Urgent Triage
+                        </span>
+                      </div>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-sm font-bold text-slate-900">$48,250.00</span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-sm font-medium text-slate-600">Global Trade Corp</span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-xs font-mono text-slate-500">09:12:04</span>
+                    </td>
+                    <td class="px-8 py-6 text-right">
+                      <a id="case-link-1" href="https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/20 opacity-0 group-hover:opacity-100 transition-all">
+                        Review
+                        <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50/50 transition-colors group">
+                    <td class="px-8 py-6">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-black text-slate-900">ABC789</span>
+                        <span class="text-[10px] flex items-center gap-1.5 text-blue-600 font-bold uppercase mt-1">
+                          <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                          In Review
+                        </span>
+                      </div>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-sm font-bold text-slate-900">$12,400.00</span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-sm font-medium text-slate-600">Acme Logistics</span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-xs font-mono text-slate-500">08:45:12</span>
+                    </td>
+                    <td class="px-8 py-6 text-right">
+                      <a id="case-link-2" href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/20 opacity-0 group-hover:opacity-100 transition-all">
+                        Review
+                        <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50/50 transition-colors group">
+                    <td class="px-8 py-6">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-black text-slate-900">KLY654</span>
+                        <span class="text-[10px] flex items-center gap-1.5 text-orange-600 font-bold uppercase mt-1">
+                          <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                          Awaiting RM
+                        </span>
+                      </div>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-sm font-bold text-slate-900">$3,210.50</span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-sm font-medium text-slate-600">Stark Ind.</span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-xs font-mono text-slate-500">08:32:00</span>
+                    </td>
+                    <td class="px-8 py-6 text-right">
+                      <a id="case-link-3" href="#" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-500/20 opacity-0 group-hover:opacity-100 transition-all">
+                        Review
+                        <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-6 border-t border-slate-50 flex justify-between items-center">
+              <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Showing 3 of 142 Active Cases</p>
+              <a id="view-all-cases-link" href="https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96" class="text-blue-600 text-xs font-black uppercase tracking-widest hover:text-blue-700 transition-colors">
+                View Full Queue →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar (Activity & System Status) -->
+        <div class="col-span-12 xl:col-span-4 space-y-8">
+          <!-- Recent Activity -->
+          <div class="bg-white rounded-[2rem] refined-border refined-shadow p-8">
+            <div class="flex items-center justify-between mb-8">
+              <h2 class="font-display font-bold text-lg text-slate-900">Recent Activity</h2>
+              <button id="activity-more-btn" class="text-slate-400 hover:text-slate-600">
+                <iconify-icon icon="lucide:more-horizontal"></iconify-icon>
+              </button>
+            </div>
+
+            <div class="space-y-6">
+              <div class="flex gap-4">
+                <div class="mt-1 w-2 h-2 rounded-full bg-blue-500 ring-4 ring-blue-50"></div>
+                <div>
+                  <p class="text-sm font-bold text-slate-900">System flagged XYZ123</p>
+                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">$48k BECS recall detected via intent scan. High confidence (92%).</p>
+                  <span class="text-[10px] text-slate-400 font-bold uppercase mt-2 block">3m ago</span>
+                </div>
+              </div>
+
+              <div class="flex gap-4">
+                <div class="mt-1 w-2 h-2 rounded-full bg-emerald-500 ring-4 ring-emerald-50"></div>
+                <div>
+                  <p class="text-sm font-bold text-slate-900">Case ABC789 Resolved</p>
+                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">Recall successful. Scheme intercept confirmed by John Doe.</p>
+                  <span class="text-[10px] text-slate-400 font-bold uppercase mt-2 block">15m ago</span>
+                </div>
+              </div>
+
+              <div class="flex gap-4">
+                <div class="mt-1 w-2 h-2 rounded-full bg-orange-500 ring-4 ring-orange-50"></div>
+                <div>
+                  <p class="text-sm font-bold text-slate-900">Policy Warning Update</p>
+                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">New threshold for automated Westpac intercepts set to $100k.</p>
+                  <span class="text-[10px] text-slate-400 font-bold uppercase mt-2 block">1h ago</span>
+                </div>
+              </div>
+            </div>
+            
+            <a id="view-audit-link" href="https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2" class="mt-10 block w-full py-3 text-center bg-slate-50 text-slate-600 rounded-xl text-xs font-bold border border-slate-100 hover:bg-slate-100 transition-all">
+              View Full Audit Log
+            </a>
+          </div>
+
+          <!-- System Load -->
+          <div class="bg-slate-900 rounded-[2rem] p-8 text-white">
+            <div class="flex items-center gap-3 mb-6">
+              <iconify-icon icon="lucide:cpu" class="text-blue-400 text-xl"></iconify-icon>
+              <h2 class="font-display font-bold text-lg">System Integrity</h2>
+            </div>
+            
+            <div class="space-y-6">
+              <div>
+                <div class="flex justify-between text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
+                  <span>OCR Pipeline</span>
+                  <span class="text-blue-400">Healthy</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-800 rounded-full">
+                  <div class="w-full h-full bg-blue-500 rounded-full"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">
+                  <span>Scheme Intercept Hub</span>
+                  <span class="text-emerald-400">98% Load</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-800 rounded-full">
+                  <div class="w-[98%] h-full bg-emerald-500 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-slate-800">
+              <p class="text-[10px] font-mono text-slate-500">VERSION: 4.2.0-STABLE</p>
+              <p class="text-[10px] font-mono text-slate-500">REGION: AP-SOUTHEAST-2</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

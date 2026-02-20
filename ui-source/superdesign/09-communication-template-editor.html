@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Communication Template Editor | BECS Recall</title>
+  <meta name="view-transition" content="same-origin">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/dc48f744-c63b-4dce-a1f9-31dce512d2ec" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/b2d1b345-c98c-4f8f-bbb6-a1e9b85d694f" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1" as="document">
+  <link rel="prefetch" href="https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d" as="document">
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&f[]=satoshi@400,500,700&f[]=jet-brains-mono@400&display=swap');
+
+    :root {
+      --bank-blue: #0052FF;
+      --bank-navy: #0F172A;
+      --bank-gray: #F8FAFC;
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-display {
+      font-family: 'General Sans', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .refined-shadow {
+      box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.08);
+    }
+
+    .refined-border {
+      border: 1px solid #e2e8f0;
+    }
+
+    @view-transition {
+      navigation: auto;
+    }
+
+    html {
+      background-color: #F8FAFC;
+    }
+
+    ::view-transition-old(main-nav),
+    ::view-transition-new(main-nav) {
+      animation: none;
+      mix-blend-mode: normal;
+    }
+
+    ::view-transition-old(main-content) {
+      animation: 0.25s ease-out both fade-out;
+    }
+    ::view-transition-new(main-content) {
+      animation: 0.25s ease-in 0.1s both fade-in;
+    }
+
+    @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+    .variable-tag {
+      transition: all 0.2s ease;
+    }
+    .variable-tag:hover {
+      background-color: #DBEAFE;
+      color: #1D4ED8;
+    }
+
+    .template-item.active {
+      background-color: #EFF6FF;
+      border-color: #BFDBFE;
+      color: #1E40AF;
+    }
+  </style>
+  <style>sd-component { display: block; }</style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+</head>
+<body>
+  <div class="flex min-h-screen">
+    <!-- component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+<div v-scope="{ ...{&quot;activeItem&quot;:&quot;ops-tools&quot;,&quot;triageBadgeCount&quot;:4,&quot;dashboardHref&quot;:&quot;https://p.superdesign.dev/draft/a26ff3ae-81d1-4813-a5a1-dc105c3d60b7&quot;,&quot;triageHref&quot;:&quot;https://p.superdesign.dev/draft/c82b752c-5be5-4c84-a36e-5763dd9c0930&quot;,&quot;casesHref&quot;:&quot;https://p.superdesign.dev/draft/64961721-e48d-45c7-b865-68c0a42a8c96&quot;,&quot;schemesHref&quot;:&quot;https://p.superdesign.dev/draft/ef2560cb-459c-4817-afa7-ef1713f3879d&quot;,&quot;opsToolsHref&quot;:&quot;https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1&quot;,&quot;auditHref&quot;:&quot;https://p.superdesign.dev/draft/a388dd6d-a5ef-411c-b6fb-b301b042e1e2&quot;,&quot;settingsHref&quot;:&quot;#settings&quot;,&quot;userName&quot;:&quot;John Doe&quot;,&quot;userRole&quot;:&quot;Payment Ops II&quot;,&quot;userInitials&quot;:&quot;JD&quot;}, $emit() {} }" style="view-transition-name: main-nav">
+<aside class="w-64 bg-slate-900 text-white flex flex-col fixed h-full z-50">
+  <div class="p-8 flex items-center gap-3">
+    <div class="w-9 h-9 bg-blue-600 rounded flex items-center justify-center shadow-lg shadow-blue-500/20">
+      <iconify-icon icon="lucide:shield-check" class="text-xl"></iconify-icon>
+    </div>
+    <span class="font-display font-bold text-2xl tracking-tight">SENTINEL</span>
+  </div>
+  
+  <nav class="flex-1 px-4 py-4 space-y-2">
+    <a :href="dashboardHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'dashboard' }">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Dashboard</span>
+    </a>
+    <a :href="triageHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'triage' }">
+      <iconify-icon icon="lucide:list-todo" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Triage Queue</span>
+      <span v-if="triageBadgeCount > 0" class="ml-auto bg-red-500 text-[10px] font-bold px-2 py-0.5 rounded-full">{{ triageBadgeCount }}</span>
+    </a>
+    <a :href="casesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'cases' }">
+      <iconify-icon icon="lucide:briefcase" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Cases</span>
+    </a>
+    <a :href="schemesHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'schemes' }">
+      <iconify-icon icon="lucide:landmark" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Schemes</span>
+    </a>
+    <a :href="opsToolsHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'ops' }">
+      <iconify-icon icon="lucide:wrench" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Ops Tools</span>
+    </a>
+    <a :href="auditHref" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all group" :class="{ 'bg-blue-600 text-white shadow-lg shadow-blue-900/40': activeItem === 'audit' }">
+      <iconify-icon icon="lucide:clipboard-list" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+      <span class="font-medium">Audit Log</span>
+    </a>
+  </nav>
+
+  <div class="p-6 border-t border-slate-800">
+    <a :href="settingsHref" class="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-white transition-all text-sm group">
+      <iconify-icon icon="lucide:settings" class="group-hover:rotate-45 transition-transform"></iconify-icon>
+      <span>Settings</span>
+    </a>
+    <div class="mt-6 flex items-center gap-3 px-4">
+      <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold border-2 border-slate-600">{{ userInitials }}</div>
+      <div>
+        <p class="text-sm font-semibold">{{ userName }}</p>
+        <p class="text-[11px] text-slate-500">{{ userRole }}</p>
+      </div>
+    </div>
+  </div>
+</aside>
+</div>
+<!-- /component: SidebarNavigation (bb891d2d-6348-455c-a5b1-9a3bbb1dd651) -->
+
+    <main class="flex-1 ml-64 p-10" style="view-transition-name: main-content">
+      <header class="flex justify-between items-center mb-8">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-3 text-sm text-slate-500">
+            <a id="breadcrumb-ops-link" href="https://p.superdesign.dev/draft/b9ddbda1-385b-4193-8eed-eb02bc334dc1" class="hover:text-blue-600 transition-colors">Ops Tools</a>
+            <iconify-icon icon="lucide:chevron-right" class="text-slate-300"></iconify-icon>
+            <span class="text-slate-900 font-semibold">Communication Templates</span>
+          </div>
+          <h1 class="text-3xl font-display font-bold text-slate-900">Template Customization</h1>
+        </div>
+        
+        <div class="flex items-center gap-3">
+          <button id="reset-default-btn" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+            <iconify-icon icon="lucide:rotate-ccw"></iconify-icon>
+            Reset to Default
+          </button>
+          <button id="save-changes-btn" class="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2">
+            <iconify-icon icon="lucide:save"></iconify-icon>
+            Save Changes
+          </button>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-12 gap-8">
+        <aside class="col-span-12 lg:col-span-3 space-y-6">
+          <div class="bg-white rounded-2xl refined-border refined-shadow overflow-hidden">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+              <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Template Catalog</h3>
+            </div>
+            <nav class="p-2 flex flex-col gap-1">
+              <a id="template-recall-initiated" href="#" class="template-item active flex items-center gap-3 p-3 rounded-xl text-sm font-bold transition-all">
+                <iconify-icon icon="lucide:mail-plus" class="text-lg"></iconify-icon>
+                Recall Initiated
+              </a>
+              <a id="template-recovery-success" href="#" class="template-item flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-bold transition-all">
+                <iconify-icon icon="lucide:check-circle-2" class="text-lg"></iconify-icon>
+                Recovery Successful
+              </a>
+              <a id="template-escalation" href="#" class="template-item flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-bold transition-all">
+                <iconify-icon icon="lucide:alert-triangle" class="text-lg"></iconify-icon>
+                Escalation Required
+              </a>
+              <a id="template-notification" href="#" class="template-item flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-slate-50 text-sm font-bold transition-all">
+                <iconify-icon icon="lucide:bell" class="text-lg"></iconify-icon>
+                Customer Notification
+              </a>
+            </nav>
+          </div>
+
+          <div class="bg-white rounded-2xl refined-border refined-shadow p-5 space-y-4">
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Version History</h3>
+            <div class="space-y-4">
+              <div class="flex items-start gap-3 relative pb-4 border-l-2 border-blue-100 ml-2 pl-4">
+                <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-blue-600 border-2 border-white"></div>
+                <div>
+                  <p class="text-xs font-bold text-slate-900">v1.2 - Current</p>
+                  <p class="text-[10px] text-slate-400 mt-0.5">Today, 09:14 AM by J. Doe</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 relative pb-4 border-l-2 border-slate-100 ml-2 pl-4">
+                <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-300 border-2 border-white"></div>
+                <div>
+                  <p class="text-xs font-bold text-slate-600">v1.1</p>
+                  <p class="text-[10px] text-slate-400 mt-0.5">Oct 23, 14:20 PM by S. Jenkins</p>
+                </div>
+              </div>
+              <button id="view-all-history" class="w-full text-center text-xs font-bold text-blue-600 hover:underline">View Full History</button>
+            </div>
+          </div>
+        </aside>
+
+        <section class="col-span-12 lg:col-span-6 space-y-6">
+          <div class="bg-white rounded-2xl refined-border refined-shadow p-8 space-y-6">
+            <div class="space-y-2">
+              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Email Subject Line</label>
+              <input type="text" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-slate-900" value="Recall Status: {{paymentRef}}">
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex justify-between items-end">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Body Text (HTML Supported)</label>
+                <span class="text-[10px] font-bold text-emerald-600 flex items-center gap-1">Auto-saving...</span>
+              </div>
+              <textarea rows="12" class="w-full p-6 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-mono text-sm leading-relaxed text-slate-700 bg-slate-50/30">
+We have successfully initialized the scheme intercept for your batch payment of {{amount}} (Ref: {{paymentRef}}).
+
+The recall is currently pending final verification. This action was initiated by operator {{operatorName}} at {{timestamp}} to prevent unintended settlement.
+
+Please monitor your portal for final status updates.
+
+Regards,
+Fraud & Risk Operations Team
+Global Bank Australia
+              </textarea>
+            </div>
+
+            <div class="space-y-3">
+              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Insert Variables</label>
+              <div class="flex flex-wrap gap-2">
+                <button class="variable-tag px-3 py-1.5 rounded-lg border border-slate-100 bg-slate-50 text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                  <iconify-icon icon="lucide:plus"></iconify-icon>
+                  {{paymentRef}}
+                </button>
+                <button class="variable-tag px-3 py-1.5 rounded-lg border border-slate-100 bg-slate-50 text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                  <iconify-icon icon="lucide:plus"></iconify-icon>
+                  {{amount}}
+                </button>
+                <button class="variable-tag px-3 py-1.5 rounded-lg border border-slate-100 bg-slate-50 text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                  <iconify-icon icon="lucide:plus"></iconify-icon>
+                  {{senderName}}
+                </button>
+                <button class="variable-tag px-3 py-1.5 rounded-lg border border-slate-100 bg-slate-50 text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                  <iconify-icon icon="lucide:plus"></iconify-icon>
+                  {{operatorName}}
+                </button>
+                <button class="variable-tag px-3 py-1.5 rounded-lg border border-slate-100 bg-slate-50 text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                  <iconify-icon icon="lucide:plus"></iconify-icon>
+                  {{timestamp}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="col-span-12 lg:col-span-3 space-y-6">
+          <div class="bg-white rounded-2xl refined-border refined-shadow overflow-hidden sticky top-10">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+              <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Preview</h3>
+              <div class="flex gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+              </div>
+            </div>
+            <div class="p-6 bg-slate-50 min-h-[400px] flex flex-col">
+              <div class="bg-white rounded-lg border border-slate-200 shadow-sm flex-1 p-6 space-y-6">
+                <div class="space-y-1">
+                  <div class="text-[10px] text-slate-400">To: <span class="text-slate-900 font-bold">client.ops@globaltrade.com</span></div>
+                  <div class="text-[10px] text-slate-400">Subject: <span class="text-slate-900 font-black">Recall Status: XYZ123-BECS</span></div>
+                </div>
+                <div class="border-t border-slate-100 pt-6">
+                  <div class="text-xs leading-relaxed text-slate-700">
+                    <p>We have successfully initialized the scheme intercept for your batch payment of <span class="bg-yellow-100 px-1 font-bold">$48,250.00</span> (Ref: <span class="bg-yellow-100 px-1 font-bold">XYZ123-BECS</span>).</p>
+                    <br>
+                    <p>The recall is currently pending final verification. This action was initiated by operator <span class="bg-yellow-100 px-1 font-bold">John Doe</span> at <span class="bg-yellow-100 px-1 font-bold">09:14:15 AM</span> to prevent unintended settlement.</p>
+                    <br>
+                    <p>Please monitor your portal for final status updates.</p>
+                    <br>
+                    <p>Regards,<br><strong>Fraud & Risk Operations Team</strong><br>Global Bank Australia</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-6 flex flex-col items-center gap-2">
+                <div class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold border border-blue-100">
+                  Responsive Desktop Preview
+                </div>
+                <div class="flex gap-4 opacity-40">
+                  <iconify-icon icon="lucide:smartphone"></iconify-icon>
+                  <iconify-icon icon="lucide:tablet"></iconify-icon>
+                  <iconify-icon icon="lucide:monitor" class="text-blue-600"></iconify-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
