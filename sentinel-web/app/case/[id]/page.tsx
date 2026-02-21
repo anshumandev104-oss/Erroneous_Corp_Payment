@@ -1,13 +1,32 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
-import { ChevronRight, Bell, Sparkles, CheckCircle, AlertTriangle } from 'lucide-react';
+import {
+  ChevronRight, Bell, Sparkles, CheckCircle, AlertTriangle,
+  Clock4, AlertOctagon, UserCheck, Send, Mail, ChevronDown,
+} from 'lucide-react';
 import SidebarNavigation from '@/components/SidebarNavigation';
 import SLARiskMonitor from '@/components/SLARiskMonitor';
-import RecallActionsPanel from '@/components/RecallActionsPanel';
 import type { CaseJson } from '@/lib/case-types';
 import { formatAUD, getUrgencyBadgeClass } from '@/lib/utils';
+
+// Lazy-load the client component — defers its JS bundle until needed
+const RecallActionsPanel = dynamic(
+  () => import('@/components/RecallActionsPanel'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="bg-white rounded-[2.5rem] refined-border refined-shadow p-10 space-y-4 animate-pulse">
+        <div className="h-6 w-44 bg-slate-100 rounded" />
+        <div className="h-4 w-64 bg-slate-50 rounded" />
+        <div className="h-16 bg-slate-100 rounded-2xl" />
+        <div className="h-16 bg-slate-100 rounded-2xl" />
+      </div>
+    ),
+  }
+);
 
 const DATA_CASES = path.join(process.cwd(), '..', 'data', 'cases');
 
@@ -41,9 +60,23 @@ export default async function CaseDetailPage({ params }: PageProps) {
   const isCritical = case_json.urgency === 'critical';
 
   const bannerBg = isCritical ? 'banner-pulse' : 'bg-amber-500';
+  const BannerIcon = isCritical ? AlertOctagon : Clock4;
   const urgencyLabel = isCritical
     ? 'High Urgency • BECS Recall Request'
     : 'In Review • Active Operational Investigation';
+
+  // Derive comms data for Communication History
+  const triage_ts = new Date(case_json.audit.triage_timestamp);
+  const commsDate = triage_ts.toLocaleDateString('en-AU', {
+    month: 'short', day: 'numeric',
+  });
+  const commsTime = triage_ts.toLocaleTimeString('en-AU', {
+    hour: '2-digit', minute: '2-digit', hour12: true,
+  });
+  const replyTime = new Date(triage_ts.getTime() + 2 * 60000).toLocaleTimeString('en-AU', {
+    hour: '2-digit', minute: '2-digit', hour12: true,
+  });
+  const sourceFrom = case_json.audit.source_email.replace('[EMAIL]', 'sender@example.com');
 
   return (
     <div className="flex min-h-screen">
@@ -60,9 +93,11 @@ export default async function CaseDetailPage({ params }: PageProps) {
             <span className="text-slate-900 font-semibold">Case {case_json.reference_id}-BECS</span>
           </div>
           <div className="flex items-center gap-4">
+            {/* Status chip with UserCheck */}
             <div className="flex items-center gap-2 bg-white px-5 py-2.5 rounded-full refined-shadow refined-border">
+              <UserCheck size={16} className="text-amber-500" />
               <span className="text-xs font-bold text-slate-700 tracking-wide">
-                {case_json.status}
+                In Review by John Doe
               </span>
             </div>
             <button className="w-10 h-10 flex items-center justify-center bg-white rounded-full refined-border refined-shadow hover:bg-slate-50 transition-all">
@@ -76,8 +111,10 @@ export default async function CaseDetailPage({ params }: PageProps) {
           <section className="col-span-12 lg:col-span-8 space-y-8">
             {/* Hero Case Summary */}
             <div className="bg-white rounded-[2rem] refined-border refined-shadow overflow-hidden">
+              {/* Banner with icon */}
               <div className={`${bannerBg} px-8 py-4 flex items-center justify-between text-white`}>
                 <div className="flex items-center gap-3">
+                  <BannerIcon size={22} />
                   <span className="text-sm font-extrabold uppercase tracking-[0.1em]">{urgencyLabel}</span>
                 </div>
                 <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/20 ${getUrgencyBadgeClass(case_json.urgency)}`}>
@@ -91,7 +128,7 @@ export default async function CaseDetailPage({ params }: PageProps) {
                     <h1 className="text-5xl font-display font-extrabold text-slate-900 tracking-tight">
                       {formatAUD(case_json.amount)}
                     </h1>
-                    <div className="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold border border-blue-100 tracking-wider">
+                    <div className="px-3 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 tracking-wider">
                       REF: {case_json.reference_id}
                     </div>
                   </div>
@@ -117,18 +154,17 @@ export default async function CaseDetailPage({ params }: PageProps) {
                     </div>
                   </div>
 
+                  {/* Chips: Incorrect Amount, Verified Intent, High Probability */}
                   <div className="flex flex-wrap gap-2 pt-4">
-                    {case_json.triage_notes && (
-                      <span className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-[11px] font-extrabold tracking-wide uppercase">
-                        Incorrect Amount
-                      </span>
-                    )}
+                    <span className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-[11px] font-extrabold tracking-wide uppercase">
+                      Incorrect Amount
+                    </span>
                     <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-[11px] font-extrabold tracking-wide border border-emerald-100 uppercase">
                       Verified Intent
                     </span>
-                    {case_json.ledger_verified && (
+                    {case_json.confidence >= 0.75 && (
                       <span className="px-3 py-1.5 bg-purple-50 text-purple-700 rounded-lg text-[11px] font-extrabold tracking-wide border border-purple-100 uppercase">
-                        Ledger Verified
+                        High Probability
                       </span>
                     )}
                   </div>
@@ -223,6 +259,99 @@ export default async function CaseDetailPage({ params }: PageProps) {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Ops Internal Notes */}
+            <div className="bg-white rounded-[2rem] refined-border refined-shadow p-10">
+              <h2 className="font-display font-bold text-xl text-slate-900 mb-6">Ops Internal Notes</h2>
+              <div className="space-y-4">
+                {/* Static note from JD */}
+                <div className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <div className="w-10 h-10 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center font-bold text-slate-600 text-sm">
+                    JD
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-bold text-slate-900">John Doe (Ops II)</span>
+                      <span className="text-[10px] text-slate-400">{commsTime}</span>
+                    </div>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {case_json.triage_notes
+                        ? `AI triage confirmed: ${case_json.triage_notes.slice(0, 120)}${case_json.triage_notes.length > 120 ? '…' : ''}`
+                        : 'Case reviewed. Proceeding per standard recall protocol. Secondary approval required if amount exceeds threshold.'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Note input */}
+                <div className="relative flex items-center">
+                  <input
+                    type="text"
+                    placeholder="Add internal note..."
+                    className="w-full pl-4 pr-12 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  />
+                  <button className="absolute right-2 w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors">
+                    <Send size={14} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Communication History */}
+            <div className="bg-white rounded-[2rem] refined-border refined-shadow p-10">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-display font-bold text-xl text-slate-900">Communication History</h2>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  {case_json.comms.client_update_draft ? '2' : '1'} Messages
+                </span>
+              </div>
+
+              <div className="divide-y divide-slate-100">
+                {/* Inbound: Recall Request */}
+                <details className="group py-4">
+                  <summary className="flex items-center justify-between cursor-pointer list-none">
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                        <Mail size={16} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-800">Recall Request Received</p>
+                        <p className="text-[10px] text-slate-400">
+                          {commsDate}, {commsTime} • From: {sourceFrom}
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronDown size={16} className="text-slate-400 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div className="mt-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-mono text-slate-600 leading-relaxed">
+                    <p className="font-bold text-slate-800 mb-2">Subject: URGENT: BECS Recall — Ref {case_json.reference_id}</p>
+                    <p className="whitespace-pre-wrap">{case_json.triage_notes ?? 'Recall request submitted. Please action urgently.'}</p>
+                  </div>
+                </details>
+
+                {/* Outbound: Auto-receipt (if comms draft exists) */}
+                {case_json.comms.client_update_draft && (
+                  <details className="group py-4">
+                    <summary className="flex items-center justify-between cursor-pointer list-none">
+                      <div className="flex items-center gap-4">
+                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+                          <Send size={16} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-slate-800">Recall Initialized Notification</p>
+                          <p className="text-[10px] text-slate-400">
+                            {commsDate}, {replyTime} • To: {sourceFrom}
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronDown size={16} className="text-slate-400 transition-transform group-open:rotate-180" />
+                    </summary>
+                    <div className="mt-4 p-5 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-mono text-slate-600">
+                      {case_json.comms.client_update_draft}
+                    </div>
+                  </details>
+                )}
               </div>
             </div>
 

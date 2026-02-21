@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   RefreshCw, Search, Filter, Flag, Download,
-  Layers, Clock, ShieldAlert, CheckCircle,
+  Layers, Clock, ShieldAlert, CheckCircle, Inbox,
   ChevronRight, ChevronLeft,
 } from 'lucide-react';
 import SidebarNavigation from '@/components/SidebarNavigation';
@@ -42,14 +42,22 @@ function SlaCell({ score }: { score: number }) {
 }
 
 export default function CasesPage() {
-  const [queue, setQueue]   = useState<QueueRecord[]>([]);
-  const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [queue, setQueue]           = useState<QueueRecord[]>([]);
+  const [search, setSearch]         = useState('');
+  const [loading, setLoading]       = useState(true);
+  const [reallyEmpty, setReallyEmpty] = useState(false);
 
   useEffect(() => {
     fetch('/api/queue')
       .then(r => r.json())
-      .then((data: QueueRecord[]) => setQueue(data.length > 0 ? data : DEMO_ROWS))
+      .then((data: QueueRecord[]) => {
+        if (data.length === 0) {
+          setReallyEmpty(true);
+          setQueue(DEMO_ROWS); // show demo so UI isn't blank
+        } else {
+          setQueue(data);
+        }
+      })
       .catch(() => setQueue(DEMO_ROWS))
       .finally(() => setLoading(false));
   }, []);
@@ -119,10 +127,11 @@ export default function CasesPage() {
                 <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
+                  data-search
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search ref, sender, or amount..."
-                  className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-sm"
+                  className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 outline-none text-sm transition-all"
                 />
               </div>
               <button className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 flex items-center gap-2 hover:bg-slate-50">
@@ -169,8 +178,39 @@ export default function CasesPage() {
                   ))
                 ) : filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-6 py-12 text-center text-slate-400">
-                      <p className="font-bold">No cases match your search</p>
+                    <td colSpan={9}>
+                      <div className="py-20 flex flex-col items-center gap-4 text-center">
+                        <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center">
+                          <Inbox size={28} className="text-slate-300" />
+                        </div>
+                        {reallyEmpty && !search ? (
+                          <>
+                            <p className="font-bold text-slate-500 text-lg">No active recalls</p>
+                            <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
+                              Drop an email into{' '}
+                              <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs font-mono">inbound_emails/</code>
+                              {' '}or click &apos;Seed&apos; in Ops Tools to populate the queue.
+                            </p>
+                            <Link
+                              href="/ops-tools"
+                              className="mt-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/20"
+                            >
+                              Go to Ops Tools →
+                            </Link>
+                          </>
+                        ) : (
+                          <>
+                            <p className="font-bold text-slate-500">No cases match your search</p>
+                            <p className="text-sm text-slate-400">Try a different reference, sender, or amount.</p>
+                            <button
+                              onClick={() => setSearch('')}
+                              className="mt-1 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                            >
+                              Clear search
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ) : filtered.map(q => (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ShieldCheck, X, AlertTriangle, Loader2, CheckCircle2 } from 'lucide-react';
 import type { CaseJson } from '@/lib/case-types';
 import type { StagedAction, ApproveActionPayload } from '@/lib/action-types';
@@ -39,6 +39,8 @@ export default function ApproveConfirmModal({
   const [apiError, setApiError]           = useState<string | null>(null);
   const [approvedCase, setApprovedCase]   = useState<CaseJson | null>(null);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
   // Keep stable ref to onConfirm so the auto-close effect never restarts
   const onConfirmRef = useRef(onConfirm);
   useEffect(() => { onConfirmRef.current = onConfirm; }, [onConfirm]);
@@ -50,6 +52,45 @@ export default function ApproveConfirmModal({
       return () => clearTimeout(t);
     }
   }, [modalState, approvedCase]);
+
+  // Focus first focusable element when modal opens
+  useEffect(() => {
+    const el = modalRef.current?.querySelector<HTMLElement>(
+      'input:not([disabled]), button:not([disabled]), textarea'
+    );
+    el?.focus();
+  }, []); // intentionally empty — run once on mount
+
+  // Escape closes (idle only) + Tab focus trap
+  const stableCancel = useCallback(onCancel, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape' && modalState === 'idle') {
+        stableCancel();
+        return;
+      }
+      if (e.key !== 'Tab' || !modalRef.current) return;
+
+      const focusable = Array.from(
+        modalRef.current.querySelectorAll<HTMLElement>(
+          'input:not([disabled]), button:not([disabled]), textarea, select, [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (focusable.length < 2) return;
+
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      }
+    }
+
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [modalState, stableCancel]);
 
   function validate(): Record<string, string> {
     const errors: Record<string, string> = {};
@@ -112,7 +153,7 @@ export default function ApproveConfirmModal({
   if (modalState === 'approved') {
     return (
       <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-[2rem] refined-shadow w-full max-w-lg overflow-hidden">
+        <div ref={modalRef} role="dialog" aria-modal="true" aria-label="Approval confirmed" className="bg-white rounded-[2rem] refined-shadow w-full max-w-lg overflow-hidden">
           <div className="p-12 flex flex-col items-center gap-4 text-center">
             <span className="w-16 h-16 flex items-center justify-center rounded-full bg-emerald-100">
               <CheckCircle2 size={32} className="text-emerald-600" />
@@ -133,14 +174,20 @@ export default function ApproveConfirmModal({
   // ── Main modal ────────────────────────────────────────────────────────────
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-      <div className="bg-white rounded-[2rem] refined-shadow w-full max-w-lg overflow-hidden">
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        className="bg-white rounded-[2rem] refined-shadow w-full max-w-lg overflow-hidden"
+      >
 
         {/* Header */}
         <div className="bg-blue-600 px-8 py-6 flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
             <ShieldCheck size={22} />
             <div>
-              <h2 className="font-display font-bold text-lg">Human approval required</h2>
+              <h2 id="modal-title" className="font-display font-bold text-lg">Human approval required</h2>
               <p className="text-blue-200 text-xs">Action: {action.type.replace(/_/g, ' ')}</p>
             </div>
           </div>
