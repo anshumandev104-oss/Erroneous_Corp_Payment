@@ -35,7 +35,7 @@ export default function SidebarNavigation({
     { id: 'triage',    label: 'Triage Queue', href: '/triage',    icon: <ListTodo size={18} /> },
     { id: 'cases',     label: 'Cases',        href: '/cases',     icon: <Briefcase size={18} /> },
     { id: 'schemes',   label: 'Schemes',      href: '/schemes',   icon: <Landmark size={18} /> },
-    { id: 'ops',       label: 'Ops Tools',    href: '/ops',       icon: <Wrench size={18} /> },
+    { id: 'ops',       label: 'Ops Tools',    href: '/ops-tools',  icon: <Wrench size={18} /> },
     { id: 'audit',     label: 'Audit Log',    href: '/audit',     icon: <ClipboardList size={18} /> },
   ];
 
