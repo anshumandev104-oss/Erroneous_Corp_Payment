@@ -85,6 +85,26 @@ export async function POST(req: NextRequest) {
 
     await fs.writeFile(casePath, JSON.stringify(updated_case, null, 2));
 
+    // ── Append to audit log ────────────────────────────────────────────────
+    const DATA_AUDIT = path.join(process.cwd(), '..', 'data', 'audit', 'log.json');
+    const auditEntry = {
+      timestampISO: approved_action.approved_at,
+      user:         `${approver_id} (${approver_role})`,
+      action:       `${action.type.replace(/_/g, ' ')} Approved`,
+      details:      justification.length > 120 ? `${justification.slice(0, 120)}…` : justification,
+      case_ref:     `${case_json.reference_id}-BECS`,
+      case_id:      case_json.case_id,
+      outcome:      'Success',
+    };
+    await fs.mkdir(path.dirname(DATA_AUDIT), { recursive: true });
+    let auditLog: unknown[] = [];
+    try {
+      const rawLog = await fs.readFile(DATA_AUDIT, 'utf-8');
+      auditLog = JSON.parse(rawLog) as unknown[];
+    } catch { /* first entry */ }
+    auditLog.unshift(auditEntry);   // newest first
+    await fs.writeFile(DATA_AUDIT, JSON.stringify(auditLog, null, 2));
+
     return NextResponse.json({
       case_json: updated_case,
       ops_note: `Action ${action_id} (${action.type}) approved by ${approver_id} (${approver_role}) at ${approved_action.approved_at}. Executed: false — awaiting human execution.`,

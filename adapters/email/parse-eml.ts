@@ -44,6 +44,22 @@ export async function parseEml(filePath: string): Promise<ParsedEmail> {
       raw_headers[key] = typeof value === 'string' ? value : JSON.stringify(value);
     });
 
+    // Fallback for non-standard .eml files where body is empty because there
+    // is no blank line between headers and body (mailparser treats every
+    // "Key: value" line as a header).  Extract the 'body' pseudo-header or
+    // collect all non-standard header lines as the body text.
+    if (!body) {
+      const rawText = raw.toString('utf-8');
+      const rawLines = rawText.split('\n');
+      const KNOWN_HEADERS = /^(Subject|From|To|Cc|Bcc|Date|MIME-Version|Content-Type|Message-ID|Return-Path):/i;
+      const bodyLines = rawLines.filter(l => !KNOWN_HEADERS.test(l) && l.trim() !== '');
+      // Strip any leading "Body: " label (non-standard but present in sample files)
+      body = bodyLines
+        .map(l => l.replace(/^Body:\s*/i, ''))
+        .join('\n')
+        .trim();
+    }
+
     return { subject: parsed.subject ?? '', from, to, cc, body, raw_headers };
   }
 

@@ -1,21 +1,43 @@
-import { Download, Search, Calendar, Filter, ShieldOff, Sparkles, Mail, StickyNote, AlertTriangle, ShieldAlert } from 'lucide-react';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import Link from 'next/link';
+import {
+  Download, Search, Calendar, Filter,
+  ShieldOff, Sparkles, Mail, StickyNote, AlertTriangle, RotateCcw,
+} from 'lucide-react';
 import SidebarNavigation from '@/components/SidebarNavigation';
 
+export const dynamic = 'force-dynamic';
+
+// ── Types ─────────────────────────────────────────────────────────────────
+
 interface AuditRow {
-  timestamp: string;
-  user:       string;
-  initials:   string;
+  timestamp:   string;
+  user:        string;
+  initials:    string;
   avatarClass: string;
-  actionIcon: React.ReactNode;
+  actionIcon:  React.ReactNode;
   actionLabel: string;
   actionClass: string;
-  details:    string;
-  caseRef:    string;
-  caseHref:   string;
-  outcome:    'Success' | 'Pending' | 'Failed';
+  details:     string;
+  caseRef:     string;
+  caseHref:    string;
+  outcome:     'Success' | 'Pending' | 'Failed';
 }
 
-const AUDIT_ROWS: AuditRow[] = [
+interface FileAuditEntry {
+  timestampISO: string;
+  user:         string;
+  action:       string;
+  details:      string;
+  case_ref:     string;
+  case_id?:     string;
+  outcome:      'Success' | 'Pending' | 'Failed';
+}
+
+// ── Static seed rows (fallback / historical) ───────────────────────────────
+
+const SEED_ROWS: AuditRow[] = [
   {
     timestamp:   '2023-10-24T09:44:12Z',
     user:        'John Doe',
@@ -83,6 +105,71 @@ const AUDIT_ROWS: AuditRow[] = [
   },
 ];
 
+// ── File entry → AuditRow conversion ──────────────────────────────────────
+
+function fileEntryToRow(entry: FileAuditEntry): AuditRow {
+  const actionUpper = entry.action.toUpperCase();
+
+  let actionIcon: React.ReactNode;
+  let actionClass: string;
+
+  if (actionUpper.includes('SCHEME STOP') || actionUpper.includes('STOP')) {
+    actionIcon  = <ShieldOff size={14} />;
+    actionClass = 'text-blue-600';
+  } else if (actionUpper.includes('RETURN') || actionUpper.includes('REQUEST')) {
+    actionIcon  = <RotateCcw size={14} />;
+    actionClass = 'text-purple-600';
+  } else if (actionUpper.includes('OUTREACH') || actionUpper.includes('BENEFICIARY') || actionUpper.includes('COMMUNICATION')) {
+    actionIcon  = <Mail size={14} />;
+    actionClass = 'text-slate-600';
+  } else if (actionUpper.includes('TRIAGE')) {
+    actionIcon  = <Sparkles size={14} />;
+    actionClass = 'text-indigo-600';
+  } else if (entry.outcome === 'Failed') {
+    actionIcon  = <AlertTriangle size={14} />;
+    actionClass = 'text-red-600';
+  } else {
+    actionIcon  = <StickyNote size={14} />;
+    actionClass = 'text-slate-600';
+  }
+
+  const isSystem  = /system|ai/i.test(entry.user);
+  const initials  = isSystem
+    ? '✦'
+    : entry.user.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const avatarClass = isSystem ? 'bg-indigo-100 text-indigo-700' : 'bg-blue-100 text-blue-700';
+
+  return {
+    timestamp:   entry.timestampISO,
+    user:        entry.user,
+    initials,
+    avatarClass,
+    actionIcon,
+    actionLabel: entry.action,
+    actionClass,
+    details:     entry.details,
+    caseRef:     entry.case_ref,
+    caseHref:    entry.case_id ? `/case/${entry.case_id}` : '#',
+    outcome:     entry.outcome,
+  };
+}
+
+// ── Read live entries from data/audit/log.json ────────────────────────────
+
+const DATA_AUDIT = path.join(process.cwd(), '..', 'data', 'audit', 'log.json');
+
+async function readLiveRows(): Promise<AuditRow[]> {
+  try {
+    const raw     = await fs.readFile(DATA_AUDIT, 'utf-8');
+    const entries = JSON.parse(raw) as FileAuditEntry[];
+    return entries.map(fileEntryToRow);
+  } catch {
+    return [];
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+
 function outcomeBadge(outcome: AuditRow['outcome']) {
   switch (outcome) {
     case 'Success': return 'bg-emerald-50 text-emerald-700 border border-emerald-100';
@@ -91,7 +178,13 @@ function outcomeBadge(outcome: AuditRow['outcome']) {
   }
 }
 
-export default function AuditPage() {
+// ── Page ──────────────────────────────────────────────────────────────────
+
+export default async function AuditPage() {
+  const liveRows = await readLiveRows();
+  const rows     = liveRows.length > 0 ? [...liveRows, ...SEED_ROWS] : SEED_ROWS;
+  const total    = rows.length;
+
   return (
     <div className="flex min-h-screen">
       <SidebarNavigation activeItem="audit" triageBadgeCount={0} />
@@ -172,7 +265,7 @@ export default function AuditPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {AUDIT_ROWS.map((row, i) => (
+                {rows.map((row, i) => (
                   <tr key={i} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-8 py-6 text-xs font-mono font-medium text-slate-500">{row.timestamp}</td>
                     <td className="px-6 py-6">
@@ -193,7 +286,9 @@ export default function AuditPage() {
                       <p className="text-xs text-slate-600 max-w-xs leading-relaxed">{row.details}</p>
                     </td>
                     <td className="px-6 py-6">
-                      <a href={row.caseHref} className="text-xs font-bold text-blue-600 hover:underline">{row.caseRef}</a>
+                      <Link href={row.caseHref} className="text-xs font-bold text-blue-600 hover:underline">
+                        {row.caseRef}
+                      </Link>
                     </td>
                     <td className="px-8 py-6">
                       <span className={`px-2 py-1 rounded text-[10px] font-black uppercase ${outcomeBadge(row.outcome)}`}>
@@ -208,17 +303,18 @@ export default function AuditPage() {
 
           {/* Pagination */}
           <div className="px-8 py-5 border-t border-slate-100 flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Showing 1 to 5 of 1,248 entries</p>
+            <p className="text-xs font-medium text-slate-500">
+              Showing 1 to {total} of {total} entries
+              {liveRows.length > 0 && (
+                <span className="ml-2 text-emerald-600 font-bold">({liveRows.length} live)</span>
+              )}
+            </p>
             <div className="flex items-center gap-2">
               <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-400 cursor-not-allowed">Previous</button>
               <div className="flex items-center gap-1">
                 <button className="w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-lg text-xs font-bold">1</button>
-                <button className="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50">2</button>
-                <button className="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50">3</button>
-                <span className="px-1 text-slate-400">…</span>
-                <button className="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50">250</button>
               </div>
-              <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">Next</button>
+              <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-400 cursor-not-allowed">Next</button>
             </div>
           </div>
         </div>

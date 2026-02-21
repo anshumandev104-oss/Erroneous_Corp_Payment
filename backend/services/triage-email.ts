@@ -27,7 +27,9 @@ function normalizeAmount(raw: string): number {
 
 function detectLanguage(text: string): 'en' | 'other' {
   const nonAsciiRatio = (text.match(/[^\x00-\x7F]/g) ?? []).length / Math.max(text.length, 1);
-  const spanishHints = /\b(solicitud|transferencia|detener|monto|antes|del|settlement)\b/i.test(text);
+  // Only flag unambiguously non-English words; common English banking terms
+  // (settlement, del) are intentionally excluded to avoid false positives.
+  const spanishHints = /\b(solicitud|transferencia|detener|monto)\b/i.test(text);
   if (spanishHints || nonAsciiRatio > 0.1) return 'other';
   return 'en';
 }

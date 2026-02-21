@@ -58,6 +58,10 @@ body {
   border: 1px solid #e2e8f0;
 }
 
+.stat-card-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+}
+
 .case-card:hover {
   transform: translateY(-2px);
 }
