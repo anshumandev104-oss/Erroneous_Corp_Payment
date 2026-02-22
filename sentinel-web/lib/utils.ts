@@ -82,3 +82,12 @@ export function formatRelativeTime(iso: string): string {
   return `${Math.floor(h / 24)}d ago`;
 }
 
+/** Lowercases a seed string and replaces non-alphanumeric chars with hyphens for safe file names. */
+export function generateSafeFileName(seed: string): string {
+  return seed
+    .toLowerCase()
+    .replace(/[^a-z0-9.]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
