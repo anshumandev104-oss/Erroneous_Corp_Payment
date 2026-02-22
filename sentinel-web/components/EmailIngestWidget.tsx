@@ -17,6 +17,7 @@ export default function EmailIngestWidget() {
   const [pasteText,   setPasteText]   = useState('');
   const [widgetState, setWidgetState] = useState<WidgetState>('idle');
   const [errorMsg,    setErrorMsg]    = useState<string | null>(null);
+  const [toast,       setToast]       = useState<string | null>(null);
 
   function reset() {
     setFile(null);
@@ -61,9 +62,14 @@ export default function EmailIngestWidget() {
         return;
       }
 
-      setOpen(false);
-      reset();
-      router.push(`/case/${data.case_id}`);
+      setToast('Case created from email. Redirecting\u2026');
+      router.refresh();
+      setTimeout(() => {
+        setToast(null);
+        setOpen(false);
+        reset();
+        router.push(`/case/${data.case_id}`);
+      }, 1400);
     } catch {
       setErrorMsg('Network error. Check your connection and try again.');
       setWidgetState('error');
@@ -72,6 +78,12 @@ export default function EmailIngestWidget() {
 
   return (
     <div className="relative">
+      {toast && (
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-2.5 px-5 py-3 bg-slate-900 text-white text-sm font-medium rounded-2xl shadow-xl pointer-events-none">
+          <Loader2 size={14} className="animate-spin shrink-0" />
+          {toast}
+        </div>
+      )}
       <button
         onClick={() => { setOpen(o => !o); reset(); }}
         className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-colors refined-shadow"

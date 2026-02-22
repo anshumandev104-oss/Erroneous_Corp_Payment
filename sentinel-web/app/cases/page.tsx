@@ -48,18 +48,24 @@ export default function CasesPage() {
   const [reallyEmpty, setReallyEmpty] = useState(false);
 
   useEffect(() => {
-    fetch('/api/queue')
-      .then(r => r.json())
-      .then((data: QueueRecord[]) => {
-        if (data.length === 0) {
-          setReallyEmpty(true);
-          setQueue(DEMO_ROWS); // show demo so UI isn't blank
-        } else {
-          setQueue(data);
-        }
-      })
-      .catch(() => setQueue(DEMO_ROWS))
-      .finally(() => setLoading(false));
+    function fetchQueue() {
+      fetch('/api/queue')
+        .then(r => r.json())
+        .then((data: QueueRecord[]) => {
+          if (data.length === 0) {
+            setReallyEmpty(true);
+            setQueue(DEMO_ROWS); // show demo so UI isn't blank
+          } else {
+            setReallyEmpty(false);
+            setQueue(data);
+          }
+        })
+        .catch(() => setQueue(DEMO_ROWS))
+        .finally(() => setLoading(false));
+    }
+    fetchQueue();
+    const pollId = setInterval(fetchQueue, 10_000);
+    return () => clearInterval(pollId);
   }, []);
 
   const critical  = queue.filter(q => q.urgency === 'critical').length;

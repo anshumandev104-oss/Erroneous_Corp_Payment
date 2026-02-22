@@ -91,3 +91,11 @@ export function generateSafeFileName(seed: string): string {
     .replace(/^-|-$/g, '');
 }
 
+/** SHA-256 hex digest of a Buffer. Uses Web Crypto API (available in browser + Node 15+). */
+export async function hashBuffer(buffer: Buffer): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', buffer);
+  return Array.from(new Uint8Array(digest))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
