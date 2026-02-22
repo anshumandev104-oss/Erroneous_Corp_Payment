@@ -14,7 +14,14 @@ interface ApproveConfirmModalProps {
 
 type ModalState = 'idle' | 'validating' | 'approved';
 
-const THRESHOLD = parseInt(process.env.NEXT_PUBLIC_THRESHOLD_SECOND_APPROVER ?? '25000', 10);
+// NEXT_PUBLIC_ is required for client-side access; falls back to server var name then 25000.
+// The server route independently enforces its own env var — this is a UX guard only.
+const THRESHOLD = parseInt(
+  process.env.NEXT_PUBLIC_THRESHOLD_SECOND_APPROVER ??
+  process.env.THRESHOLD_SECOND_APPROVER ??
+  '25000',
+  10,
+);
 
 /**
  * HITL Confirmation Modal.
@@ -153,12 +160,12 @@ export default function ApproveConfirmModal({
   if (modalState === 'approved') {
     return (
       <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-        <div ref={modalRef} role="dialog" aria-modal="true" aria-label="Approval confirmed" className="bg-white rounded-[2rem] refined-shadow w-full max-w-lg overflow-hidden">
+        <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="success-modal-title" className="bg-white rounded-[2rem] refined-shadow w-full max-w-lg overflow-hidden">
           <div className="p-12 flex flex-col items-center gap-4 text-center">
             <span className="w-16 h-16 flex items-center justify-center rounded-full bg-emerald-100">
               <CheckCircle2 size={32} className="text-emerald-600" />
             </span>
-            <h2 className="font-display font-bold text-xl text-slate-900">
+            <h2 id="success-modal-title" className="font-display font-bold text-xl text-slate-900">
               Action approved and recorded to Audit
             </h2>
             <p className="text-sm text-slate-500 max-w-xs">

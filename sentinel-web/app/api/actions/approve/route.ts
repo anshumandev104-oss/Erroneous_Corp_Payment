@@ -88,13 +88,23 @@ export async function POST(req: NextRequest) {
     // ── Append to audit log ────────────────────────────────────────────────
     const DATA_AUDIT = path.join(process.cwd(), '..', 'data', 'audit', 'log.json');
     const auditEntry = {
-      timestampISO: approved_action.approved_at,
-      user:         `${approver_id} (${approver_role})`,
-      action:       `${action.type.replace(/_/g, ' ')} Approved`,
-      details:      justification.length > 120 ? `${justification.slice(0, 120)}…` : justification,
-      case_ref:     `${case_json.reference_id}-BECS`,
-      case_id:      case_json.case_id,
-      outcome:      'Success',
+      timestampISO:  approved_action.approved_at,
+      case_id:       case_json.case_id,
+      case_ref:      `${case_json.reference_id}-BECS`,
+      action_id:     action_id,
+      action_type:   action.type,
+      approver_id:   approver_id,
+      approver_role: approver_role,
+      justification: justification,
+      ...(second_approver ? {
+        second_approver_id:   second_approver.approver_id,
+        second_approver_role: second_approver.approver_role,
+      } : {}),
+      // Display-friendly fields for audit/page.tsx rendering
+      user:    `${approver_id} (${approver_role})`,
+      action:  `${action.type.replace(/_/g, ' ')} Approved`,
+      details: justification.length > 120 ? `${justification.slice(0, 120)}…` : justification,
+      outcome: 'Success' as const,
     };
     await fs.mkdir(path.dirname(DATA_AUDIT), { recursive: true });
     let auditLog: unknown[] = [];

@@ -181,9 +181,10 @@ function outcomeBadge(outcome: AuditRow['outcome']) {
 // ── Page ──────────────────────────────────────────────────────────────────
 
 export default async function AuditPage() {
-  const liveRows = await readLiveRows();
-  const rows     = liveRows.length > 0 ? [...liveRows, ...SEED_ROWS] : SEED_ROWS;
-  const total    = rows.length;
+  const liveRows  = await readLiveRows();
+  const rows      = [...liveRows, ...SEED_ROWS];
+  const total     = rows.length;
+  const seedsOnly = liveRows.length === 0;
 
   return (
     <div className="flex min-h-screen">
@@ -249,6 +250,17 @@ export default async function AuditPage() {
             </div>
           </div>
         </div>
+
+        {/* Seed-data disclaimer — shown only before any real approvals exist */}
+        {seedsOnly && (
+          <div className="mb-6 px-5 py-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3">
+            <AlertTriangle size={16} className="text-amber-600 shrink-0" />
+            <p className="text-xs text-amber-800 font-medium">
+              No live audit events yet — showing historical seed data only.
+              Approve an action on a case to generate real entries.
+            </p>
+          </div>
+        )}
 
         {/* Audit table */}
         <div className="bg-white rounded-[2rem] refined-border refined-shadow overflow-hidden">
