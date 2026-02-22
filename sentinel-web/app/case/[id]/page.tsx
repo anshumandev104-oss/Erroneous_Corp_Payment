@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { Suspense } from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import {
   ChevronRight, Bell, Sparkles, CheckCircle, AlertTriangle,
@@ -9,24 +9,20 @@ import {
 } from 'lucide-react';
 import SidebarNavigation from '@/components/SidebarNavigation';
 import SLARiskMonitor from '@/components/SLARiskMonitor';
+import CaseActionsClient from '@/components/CaseActionsClient';
 import type { CaseJson } from '@/lib/case-types';
 import { formatAUD, getUrgencyBadgeClass } from '@/lib/utils';
 
-// Lazy-load the client component — defers its JS bundle until needed
-const RecallActionsPanel = dynamic(
-  () => import('@/components/RecallActionsPanel'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="bg-white rounded-[2.5rem] refined-border refined-shadow p-10 space-y-4 animate-pulse">
-        <div className="h-6 w-44 bg-slate-100 rounded" />
-        <div className="h-4 w-64 bg-slate-50 rounded" />
-        <div className="h-16 bg-slate-100 rounded-2xl" />
-        <div className="h-16 bg-slate-100 rounded-2xl" />
-      </div>
-    ),
-  }
-);
+function ActionsSkeleton() {
+  return (
+    <div className="bg-white rounded-[2.5rem] refined-border refined-shadow p-10 space-y-4 animate-pulse">
+      <div className="h-6 w-44 bg-slate-100 rounded" />
+      <div className="h-4 w-64 bg-slate-50 rounded" />
+      <div className="h-16 bg-slate-100 rounded-2xl" />
+      <div className="h-16 bg-slate-100 rounded-2xl" />
+    </div>
+  );
+}
 
 const DATA_CASES = path.join(process.cwd(), '..', 'data', 'cases');
 
@@ -394,10 +390,9 @@ export default async function CaseDetailPage({ params }: PageProps) {
               }
             />
 
-            <RecallActionsPanel
-              case_json={case_json}
-              onApproveSuccess={() => { /* In a full SPA this would update state — page will reflect on next load */ }}
-            />
+            <Suspense fallback={<ActionsSkeleton />}>
+              <CaseActionsClient case_json={case_json} />
+            </Suspense>
           </section>
         </div>
       </main>
