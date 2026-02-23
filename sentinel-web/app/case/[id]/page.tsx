@@ -11,6 +11,7 @@ import SidebarNavigation from '@/components/SidebarNavigation';
 import SLARiskMonitor from '@/components/SLARiskMonitor';
 import CaseActionsClient from '@/components/CaseActionsClient';
 import ImportVoiceTranscript from '@/components/ImportVoiceTranscript';
+import SeedTranscriptButton from '@/components/SeedTranscriptButton';
 import type { CaseJson } from '@/lib/case-types';
 import { formatAUD, getUrgencyBadgeClass } from '@/lib/utils';
 
@@ -396,6 +397,10 @@ export default async function CaseDetailPage({ params }: PageProps) {
             </Suspense>
 
             <ImportVoiceTranscript caseId={case_json.case_id} />
+
+            {process.env.NODE_ENV !== 'production' && (
+              <SeedTranscriptButton caseId={case_json.case_id} />
+            )}
           </section>
         </div>
       </main>
