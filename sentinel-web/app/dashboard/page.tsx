@@ -6,6 +6,7 @@ import SidebarNavigation from '@/components/SidebarNavigation';
 import StatsCard from '@/components/StatsCard';
 import CaseListItem from '@/components/CaseListItem';
 import EmailIngestWidget from '@/components/EmailIngestWidget';
+import IngestCallScriptWidget from '@/components/IngestCallScriptWidget';
 import type { QueueRecord } from '@/lib/case-types';
 
 const DATA_QUEUE = path.join(process.cwd(), '..', 'data', 'queue', 'queue.json');
@@ -53,6 +54,7 @@ export default async function DashboardPage() {
               <span className="text-xs font-bold text-slate-700 tracking-wide">AI Engine Processing</span>
             </div>
             <EmailIngestWidget />
+            <IngestCallScriptWidget />
             <button className="w-10 h-10 flex items-center justify-center bg-white rounded-full refined-border refined-shadow hover:bg-slate-50 transition-all">
               <Bell size={18} className="text-slate-600" />
             </button>
